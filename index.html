@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha Loja de Contas</title>
+    <style>
+        :root {
+            --primary: #6c5ce7;
+            --secondary: #a29bfe;
+            --background: #0f0f13;
+            --card-bg: #1e1e24;
+            --text: #ffffff;
+            --text-muted: #a0a0b0;
+            --success: #00b894;
+            --danger: #d63031;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        h2, h3 {
+            margin-bottom: 20px;
+            text-align: center;
+            color: var(--primary);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #3a3a4a;
+            background: #15151a;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--primary);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: var(--primary);
+            color: white;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: var(--secondary);
+        }
+
+        button:disabled {
+            background: #3a3a4a;
+            color: var(--text-muted);
+            cursor: not-allowed;
+        }
+
+        .item-card {
+            background: #15151a;
+            border: 1px solid #3a3a4a;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .item-card.out-of-stock {
+            opacity: 0.4;
+            filter: grayscale(1);
+        }
+
+        .item-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--danger);
+            color: white;
+            padding: 4px 8px;
+            font-size: 0.75rem;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .price {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--success);
+        }
+
+        .old-price {
+            text-decoration: line-through;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-right: 5px;
+        }
+
+        .creator-badge {
+            background: #f1c40f;
+            color: black;
+            text-align: center;
+            padding: 5px;
+            font-weight: bold;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-size: 0.85rem;
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            border: 1px solid #3a3a4a;
+        }
+
+        .payment-option {
+            background: #15151a;
+            border: 1px solid #3a3a4a;
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            color: white;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .payment-option:hover {
+            border-color: var(--primary);
+        }
+
+        /* Sucesso da Compra (Resultado da Conta) */
+        .result-box {
+            background: #27ae6020;
+            border: 2px dashed var(--success);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            text-align: left;
+        }
+
+        .result-box strong {
+            color: var(--success);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- TELA 1: LOGIN -->
+    <div id="screen-login">
+        <h2>Entrar na Loja</h2>
+        <div class="form-group">
+            <label>E-mail</label>
+            <input type="email" id="login-email" placeholder="seuemail@exemplo.com" required>
+        </div>
+        <div class="form-group">
+            <label>Senha</label>
+            <input type="password" id="login-password" placeholder="Sua senha" required>
+        </div>
+        <div class="form-group">
+            <label>Código Especial (Se tiver)</label>
+            <input type="text" id="login-code" placeholder="Código de Criador">
+        </div>
+        <button id="btn-login">Acessar Loja</button>
+    </div>
+
+    <!-- TELA 2: VITRINE DA LOJA -->
+    <div id="screen-store" class="hidden">
+        <div id="creator-indicator" class="creator-badge hidden">Modo Criador Ativo</div>
+        
+        <h2>Vitrine de Contas</h2>
+        <p id="welcome-msg" style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; text-align: center;"></p>
+
+        <!-- Twisted -->
+        <div class="item-card out-of-stock" id="card-twisted">
+            <div class="item-badge" id="badge-twisted">Sem Estoque</div>
+            <h3 style="text-align: left; margin-bottom: 5px;">Conta Twisted (1 Milhão)</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px;">Acesso imediato após o pagamento.</p>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <span class="old-price hidden" id="old-price-twisted">R$ 10,00</span>
+                    <span class="price" id="price-twisted">R$ 10,00</span>
+                </div>
+                <button style="width: auto; padding: 8px 15px;" id="btn-buy-twisted" disabled>Comprar</button>
+            </div>
+        </div>
+
+        <!-- Helicity -->
+        <div class="item-card out-of-stock" id="card-helicity">
+            <div class="item-badge" id="badge-helicity">Sem Estoque</div>
+            <h3 style="text-align: left; margin-bottom: 5px;">Conta Helicity (600 Mil)</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px;">Acesso imediato após o pagamento.</p>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <span class="old-price hidden" id="old-price-helicity">R$ 7,99</span>
+                    <span class="price" id="price-helicity">R$ 7,99</span>
+                </div>
+                <button style="width: auto; padding: 8px 15px;" id="btn-buy-helicity" disabled>Comprar</button>
+            </div>
+        </div>
+
+        <button id="btn-to-admin" class="hidden" style="background: #f1c40f; color: black; margin-top: 15px;">Ir ao Painel de Estoque</button>
+        <button id="btn-logout" style="background: transparent; border: 1px solid #3a3a4a; margin-top: 10px;">Sair</button>
+    </div>
+
+    <!-- TELA 3: PAINEL DO CRIADOR (CADASTRAR CONTAS) -->
+    <div id="screen-creator" class="hidden">
+        <h2>Painel de Estoque</h2>
+        <div class="creator-badge">Adicionar Novas Contas</div>
+
+        <div class="form-group">
+            <label>Tipo de Conta</label>
+            <select id="new-account-type">
+                <option value="twisted">Twisted (R$ 10,00)</option>
+                <option value="helicity">Helicity (R$ 7,99)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Nome do Usuário / E-mail da Conta</label>
+            <input type="text" id="new-account-user" placeholder="Ex: jogador_twisted10">
+        </div>
+
+        <div class="form-group">
+            <label>Senha da Conta</label>
+            <input type="text" id="new-account-pass" placeholder="Ex: senhaSegura123">
+        </div>
+
+        <button id="btn-add-account" style="background: var(--success); margin-bottom: 10px;">Adicionar ao Estoque</button>
+        <button id="btn-back-store" style="background: #3a3a4a;">Voltar para a Loja</button>
+    </div>
+</div>
+
+<!-- MODAL DE CHECKOUT -->
+<div id="modal-payment" class="modal hidden">
+    <div class="modal-content">
+        <h3>Finalizar Compra</h3>
+        <p id="payment-text" style="font-size: 0.9rem; margin-bottom: 20px; color: var(--text-muted);"></p>
+        
+        <button class="payment-option" onclick="processPayment('Pix')">⚡ Pagar com Pix</button>
+        <button class="payment-option" onclick="processPayment('PayPal')">💳 Pagar com PayPal</button>
+        
+        <button id="btn-cancel-pay" style="background: transparent; color: var(--danger); margin-top: 10px;">Cancelar</button>
+    </div>
+</div>
+
+<!-- MODAL DE ENTREGA DA CONTA -->
+<div id="modal-delivery" class="modal hidden">
+    <div class="modal-content">
+        <h3 style="color: var(--success);">🎉 Pagamento Confirmado!</h3>
+        <p style="font-size: 0.9rem; margin-bottom: 15px;">Guarde os dados de acesso da sua nova conta abaixo:</p>
+        
+        <div class="result-box">
+            <p><strong>Usuário:</strong> <span id="delivered-user">...</span></p>
+            <p><strong>Senha:</strong> <span id="delivered-pass">...</span></p>
+        </div>
+        
+        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 15px;">Essa conta foi removida do nosso estoque e agora é 100% sua.</p>
+        <button id="btn-close-delivery" style="margin-top: 20px; background: var(--success);">Entendido</button>
+    </div>
+</div>
+
+<script>
+    // ESTADO DO APLICATIVO
+    // Em uma loja real, estes dados viriam salvos em um banco de dados online (ex: Firebase).
+    // Aqui, eles ficam na memória do navegador (se der F5, reinicia, a menos que conecte ao banco).
+    let storeData = {
+        currentUser: null,
+        email: '',
+        promoActive: false,
+        // Listas de estoque (guardando objetos de contas reais cadastrados por você)
+        stock: {
+            twisted: [], // Ex: {user: 'twisted1', pass: '123'}
+            helicity: []
+        }
+    };
+
+    // Variável para rastrear o que o cliente está comprando no momento
+    let currentPurchaseType = ''; 
+
+    // DETECÇÃO DE PROMOÇÃO (A cada 2 semanas, nos fins de semana)
+    function checkPromotion() {
+        const now = new Date();
+        const day = now.getDay(); // 0 = Domingo, 6 = Sábado
+        const isWeekend = (day === 0 || day === 6);
+        
+        if (isWeekend) {
+            // Lógica simples para alternar a cada duas semanas
+            const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 1)) / (24 * 60 * 60 * 1000));
+            const currentWeek = Math.floor(dayOfYear / 7);
+            
+            // Ativa se for semana par
+            storeData.promoActive = (currentWeek % 2 === 0);
+        } else {
+            storeData.promoActive = false;
+        }
+    }
+
+    // LOGIN
+    document.getElementById('btn-login').addEventListener('click', () => {
+        const email = document.getElementById('login-email').value;
+        const code = document.getElementById('login-code').value.trim();
+
+        if(!email) return alert('Insira um e-mail!');
+
+        storeData.email = email;
+        checkPromotion();
+
+        if(code === '126743ff') {
+            storeData.currentUser = 'criador';
+            document.getElementById('creator-indicator').classList.remove('hidden');
+            document.getElementById('btn-to-admin').classList.remove('hidden');
+            document.getElementById('welcome-msg').innerText = "Modo Administrador/Criador ativado!";
+        } else {
+            storeData.currentUser = 'cliente';
+            document.getElementById('creator-indicator').classList.add('hidden');
+            document.getElementById('btn-to-admin').classList.add('hidden');
+            document.getElementById('welcome-msg').innerText = `Cliente: ${email}`;
+        }
+
+        document.getElementById('screen-login').classList.add('hidden');
+        document.getElementById('screen-store').classList.remove('hidden');
+        renderStore();
+    });
+
+    // ATUALIZAR TELA DA VITRINE
+    function renderStore() {
+        // Preços
+        const twistedPrice = storeData.promoActive ? 5.00 : 10.00;
+        const helicityPrice = storeData.promoActive ? 3.99 : 7.99;
+
+        document.getElementById('price-twisted').innerText = `R$ ${twistedPrice.toFixed(2).replace('.', ',')}`;
+        document.getElementById('price-helicity').innerText = `R$ ${helicityPrice.toFixed(2).replace('.', ',')}`;
+
+        if(storeData.promoActive) {
+            document.getElementById('old-price-twisted').classList.remove('hidden');
+            document.getElementById('old-price-helicity').classList.remove('hidden');
+        } else {
+            document.getElementById('old-price-twisted').classList.add('hidden');
+            document.getElementById('old-price-helicity').classList.add('hidden');
+        }
+
+        // Estoque Twisted
+        const twistedCard = document.getElementById('card-twisted');
+        const twistedBadge = document.getElementById('badge-twisted');
+        const twistedBtn = document.getElementById('btn-buy-twisted');
+        const twistedCount = storeData.stock.twisted.length;
+
+        if(twistedCount > 0) {
+            twistedCard.classList.remove('out-of-stock');
+            twistedBadge.innerText = `${twistedCount} em estoque`;
+            twistedBadge.style.background = 'var(--success)';
+            twistedBtn.removeAttribute('disabled');
+        } else {
+            twistedCard.classList.add('out-of-stock');
+            twistedBadge.innerText = 'Sem Estoque';
+            twistedBadge.style.background = 'var(--danger)';
+            twistedBtn.setAttribute('disabled', 'true');
+        }
+
+        // Estoque Helicity
+        const helicityCard = document.getElementById('card-helicity');
+        const helicityBadge = document.getElementById('badge-helicity');
+        const helicityBtn = document.getElementById('btn-buy-helicity');
+        const helicityCount = storeData.stock.helicity.length;
+
+        if(helicityCount > 0) {
+            helicityCard.classList.remove('out-of-stock');
+            helicityBadge.innerText = `${helicityCount} em estoque`;
+            helicityBadge.style.background = 'var(--success)';
+            helicityBtn.removeAttribute('disabled');
+        } else {
+            helicityCard.classList.add('out-of-stock');
+            helicityBadge.innerText = 'Sem Estoque';
+            helicityBadge.style.background = 'var(--danger)';
+            helicityBtn.setAttribute('disabled', 'true');
+        }
+    }
+
+    // CADASTRAR NOVA CONTA NO ESTOQUE (CRIADOR)
+    document.getElementById('btn-add-account').addEventListener('click', () => {
+        const type = document.getElementById('new-account-type').value;
+        const user = document.getElementById('new-account-user').value.trim();
+        const pass = document.getElementById('new-account-pass').value.trim();
+
+        if(!user || !pass) {
+            return alert('Preencha o usuário e a senha da conta!');
+        }
+
+        // Adiciona um objeto de conta na lista correspondente
+        storeData.stock[type].push({ user: user, pass: pass });
+
+        alert(`Conta adicionada ao estoque do ${type.toUpperCase()} com sucesso!`);
+        
+        // Limpar inputs
+        document.getElementById('new-account-user').value = '';
+        document.getElementById('new-account-pass').value = '';
+
+        // Volta para a loja
+        document.getElementById('screen-creator').classList.add('hidden');
+        document.getElementById('screen-store').classList.remove('hidden');
+        renderStore();
+    });
+
+    // NAVEGAÇÕES DE TELAS
+    document.getElementById('btn-to-admin').addEventListener('click', () => {
+        document.getElementById('screen-store').classList.add('hidden');
+        document.getElementById('screen-creator').classList.remove('hidden');
+    });
+
+    document.getElementById('btn-back-store').addEventListener('click', () => {
+        document.getElementById('screen-creator').classList.add('hidden');
+        document.getElementById('screen-store').classList.remove('hidden');
+    });
+
+    document.getElementById('btn-logout').addEventListener('click', () => {
+        storeData.currentUser = null;
+        document.getElementById('screen-store').classList.add('hidden');
+        document.getElementById('screen-login').classList.remove('hidden');
+    });
+
+    // FLUXO DE COMPRA E PAGAMENTO
+    document.getElementById('btn-buy-twisted').addEventListener('click', () => {
+        currentPurchaseType = 'twisted';
+        openPaymentModal('Conta Twisted 1M');
+    });
+
+    document.getElementById('btn-buy-helicity').addEventListener('click', () => {
+        currentPurchaseType = 'helicity';
+        openPaymentModal('Conta Helicity 600k');
+    });
+
+    function openPaymentModal(itemName) {
+        document.getElementById('payment-text').innerText = `Selecione a forma de pagamento para: ${itemName}`;
+        document.getElementById('modal-payment').classList.remove('hidden');
+    }
+
+    document.getElementById('btn-cancel-pay').addEventListener('click', () => {
+        document.getElementById('modal-payment').classList.add('hidden');
+    });
+
+    // PROCESSAR PAGAMENTO E ENTRAR A CONTA CADASTRADA
+    function processPayment(method) {
+        document.getElementById('modal-payment').classList.add('hidden');
+
+        // Pega a conta do estoque (vamos pegar a ÚLTIMA cadastrada)
+        // Usamos .pop() que pega o último item adicionado e remove ele do estoque ao mesmo tempo!
+        const purchasedAccount = storeData.stock[currentPurchaseType].pop();
+
+        if(purchasedAccount) {
+            // Exibir a conta na tela de entrega
+            document.getElementById('delivered-user').innerText = purchasedAccount.user;
+            document.getElementById('delivered-pass').innerText = purchasedAccount.pass;
+            document.getElementById('modal-delivery').classList.remove('hidden');
+        } else {
+            alert('Desculpe, este produto acabou de ficar fora de estoque.');
+        }
+
+        renderStore(); // Atualiza a vitrine (vai reduzir 1 do estoque)
+    }
+
+    document.getElementById('btn-close-delivery').addEventListener('click', () => {
+        document.getElementById('modal-delivery').classList.add('hidden');
+    });
+</script>
+
+</body>
+</html>
