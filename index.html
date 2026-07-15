@@ -3,18 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minha Loja de Contas Segura</title>
+    <title>Twisted & Helicity Store 🚀</title>
     <style>
         :root {
-            --primary: #6c5ce7;
-            --secondary: #a29bfe;
-            --background: #0f0f13;
-            --card-bg: #1e1e24;
-            --text: #ffffff;
-            --text-muted: #a0a0b0;
-            --success: #00b894;
-            --danger: #d63031;
-            --glow: 0 0 15px rgba(108, 92, 231, 0.5);
+            --primary: #8e44ad;
+            --secondary: #3498db;
+            --background: #0b0c10;
+            --card-bg: rgba(31, 40, 51, 0.65);
+            --text: #c5c6c7;
+            --text-light: #ffffff;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --glow-purple: 0 0 15px rgba(142, 68, 173, 0.6);
+            --glow-blue: 0 0 15px rgba(52, 152, 219, 0.6);
         }
 
         * {
@@ -26,7 +27,8 @@
 
         body {
             background-color: var(--background);
-            color: var(--text);
+            background-image: radial-gradient(circle at 50% 50%, #1f2833 0%, #0b0c10 100%);
+            color: var(--text-light);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -34,29 +36,47 @@
             padding: 20px;
         }
 
-        /* Efeito de borda neon animada no container */
         .container {
             width: 100%;
             max-width: 480px;
             background: var(--card-bg);
-            border-radius: 16px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5), var(--glow);
-            border: 1px solid rgba(108, 92, 231, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.8), var(--glow-purple);
+            border: 1px solid rgba(142, 68, 173, 0.3);
             position: relative;
-            transition: border-color 0.3s ease;
         }
 
-        /* Status do Servidor */
+        /* Alerta de Urgência de Vendas */
+        .urgency-banner {
+            background: linear-gradient(90deg, var(--danger), #f39c12);
+            color: white;
+            text-align: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+            padding: 8px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            animation: pulse-banner 2s infinite;
+        }
+
+        @keyframes pulse-banner {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
         .status-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.05);
             padding: 10px 15px;
-            border-radius: 8px;
+            border-radius: 10px;
             margin-bottom: 20px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
@@ -72,19 +92,18 @@
             background-color: var(--success);
             border-radius: 50%;
             box-shadow: 0 0 8px var(--success);
-            animation: pulse 1.5s infinite;
+            animation: pulse-dot 1.5s infinite;
         }
 
-        @keyframes pulse {
+        @keyframes pulse-dot {
             0% { opacity: 0.4; }
             50% { opacity: 1; }
             100% { opacity: 0.4; }
         }
 
-        /* Player de Música Estilizado */
         .music-player {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 50px;
             padding: 8px 16px;
             display: flex;
@@ -94,8 +113,8 @@
         }
 
         .music-player span {
-            font-size: 0.8rem;
-            color: var(--text-muted);
+            font-size: 0.75rem;
+            color: var(--text);
         }
 
         .music-btn {
@@ -105,20 +124,18 @@
             padding: 5px 12px;
             border-radius: 20px;
             cursor: pointer;
-            font-size: 0.75rem;
-            width: auto;
-            transition: transform 0.1s ease;
-        }
-
-        .music-btn:active {
-            transform: scale(0.95);
+            font-size: 0.7rem;
+            font-weight: bold;
+            box-shadow: var(--glow-purple);
         }
 
         h2, h3 {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             text-align: center;
-            color: var(--primary);
-            text-shadow: 0 0 10px rgba(108, 92, 231, 0.3);
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(142, 68, 173, 0.8);
         }
 
         .hidden {
@@ -132,59 +149,65 @@
         .form-group label {
             display: block;
             margin-bottom: 5px;
-            font-size: 0.9rem;
-            color: var(--text-muted);
+            font-size: 0.85rem;
+            color: var(--text);
+            font-weight: 600;
         }
 
         input, select {
             width: 100%;
             padding: 12px;
-            border-radius: 8px;
-            border: 1px solid #3a3a4a;
-            background: #15151a;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.4);
             color: white;
-            font-size: 1rem;
+            font-size: 0.95rem;
             outline: none;
             transition: 0.3s;
         }
 
         input:focus, select:focus {
             border-color: var(--primary);
-            box-shadow: 0 0 8px rgba(108, 92, 231, 0.3);
+            box-shadow: var(--glow-purple);
         }
 
         button {
             width: 100%;
             padding: 12px;
             border: none;
-            border-radius: 8px;
-            background: var(--primary);
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--primary), #9b59b6);
             color: white;
             font-weight: bold;
-            font-size: 1rem;
+            font-size: 0.95rem;
             cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
             transition: 0.2s ease, transform 0.1s ease;
+            box-shadow: var(--glow-purple);
         }
 
         button:hover {
-            background: var(--secondary);
+            filter: brightness(1.1);
         }
 
         button:active {
-            transform: scale(0.98);
+            transform: scale(0.97);
         }
 
         button:disabled {
-            background: #3a3a4a;
-            color: var(--text-muted);
+            background: #2c3e50;
+            color: #7f8c8d;
+            box-shadow: none;
             cursor: not-allowed;
             transform: none !important;
         }
 
+        /* Cartões de Contas estilo Neon */
         .item-card {
-            background: #15151a;
-            border: 1px solid #3a3a4a;
-            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 14px;
             padding: 20px;
             margin-bottom: 15px;
             position: relative;
@@ -192,64 +215,132 @@
         }
 
         .item-card:hover {
-            border-color: var(--primary);
-            box-shadow: var(--glow);
+            border-color: var(--secondary);
+            box-shadow: var(--glow-blue);
         }
 
         .item-card.out-of-stock {
-            opacity: 0.4;
+            opacity: 0.3;
             filter: grayscale(1);
         }
 
         .item-badge {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: 12px;
+            right: 12px;
             background: var(--danger);
             color: white;
             padding: 4px 8px;
-            font-size: 0.75rem;
-            border-radius: 4px;
+            font-size: 0.7rem;
+            border-radius: 6px;
             font-weight: bold;
         }
 
         .price {
-            font-size: 1.3rem;
-            font-weight: bold;
+            font-size: 1.4rem;
+            font-weight: 800;
             color: var(--success);
+            text-shadow: 0 0 5px rgba(46, 204, 113, 0.3);
         }
 
         .creator-badge {
             background: #f1c40f;
             color: black;
             text-align: center;
-            padding: 5px;
+            padding: 6px;
             font-weight: bold;
-            border-radius: 4px;
+            border-radius: 6px;
             margin-bottom: 15px;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
+            text-transform: uppercase;
         }
 
-        /* Seção de Depoimentos / Avaliações */
+        /* Gestão de Estoque */
+        .stock-manager {
+            margin-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .stock-manage-item {
+            background: rgba(0,0,0,0.3);
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .btn-delete-stock {
+            background: var(--danger);
+            width: auto;
+            padding: 5px 10px;
+            font-size: 0.7rem;
+            box-shadow: none;
+        }
+
+        /* Seção Tutorial Roblox */
+        .tutorial-section {
+            margin-top: 25px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 20px;
+        }
+
+        .step-item {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            font-size: 0.8rem;
+            color: var(--text);
+        }
+
+        .step-number {
+            background: var(--secondary);
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+            font-size: 0.75rem;
+        }
+
+        /* Suporte */
+        .btn-support {
+            background: #25d366;
+            margin-top: 15px;
+            box-shadow: 0 0 10px rgba(37, 211, 102, 0.4);
+        }
+
+        /* Seção de Depoimentos */
         .reviews-section {
-            margin-top: 30px;
-            border-top: 1px solid #3a3a4a;
-            padding-top: 25px;
+            margin-top: 25px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 20px;
         }
 
         .review-card {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.03);
             border-radius: 10px;
             padding: 12px;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .review-header {
             display: flex;
             justify-content: space-between;
-            font-size: 0.8rem;
-            margin-bottom: 6px;
+            font-size: 0.75rem;
+            margin-bottom: 5px;
         }
 
         .stars {
@@ -257,50 +348,49 @@
         }
 
         .review-text {
-            font-size: 0.85rem;
-            color: var(--text-muted);
+            font-size: 0.8rem;
+            color: var(--text);
             font-style: italic;
         }
 
         /* FAQ Sanfonado */
         .faq-section {
-            margin-top: 30px;
-            border-top: 1px solid #3a3a4a;
-            padding-top: 25px;
+            margin-top: 25px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 20px;
         }
 
         .faq-item {
-            border: 1px solid #3a3a4a;
+            border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 8px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             overflow: hidden;
         }
 
         .faq-question {
-            background: #15151a;
-            padding: 12px 15px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 12px;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: bold;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            user-select: none;
         }
 
         .faq-answer {
-            padding: 0 15px;
+            padding: 0 12px;
             max-height: 0;
             overflow: hidden;
-            background: rgba(255, 255, 255, 0.01);
-            font-size: 0.85rem;
-            color: var(--text-muted);
+            background: rgba(0, 0, 0, 0.1);
+            font-size: 0.8rem;
+            color: var(--text);
             transition: max-height 0.3s ease, padding 0.3s ease;
         }
 
         .faq-item.active .faq-answer {
             max-height: 200px;
-            padding: 15px;
+            padding: 12px;
         }
 
         .faq-item.active .faq-question span::after {
@@ -309,17 +399,17 @@
 
         .faq-question span::after {
             content: ' ➕';
-            font-size: 0.75rem;
+            font-size: 0.7rem;
         }
 
-        /* Modal */
+        /* Modais */
         .modal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(0, 0, 0, 0.9);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -327,55 +417,56 @@
         }
 
         .modal-content {
-            background: var(--card-bg);
-            padding: 30px;
+            background: #151d26;
+            padding: 25px;
             border-radius: 16px;
             width: 90%;
             max-width: 400px;
             text-align: center;
-            border: 1px solid #3a3a4a;
+            border: 1px solid rgba(142, 68, 173, 0.3);
         }
 
         .purchase-history {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #3a3a4a;
-            text-align: left;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .history-item {
-            background: #15151a;
+            background: rgba(0, 0, 0, 0.3);
             padding: 10px;
             border-radius: 8px;
             margin-bottom: 10px;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             border-left: 3px solid var(--success);
         }
     </style>
 </head>
 <body>
 
-<!-- Áudio em segundo plano -->
 <audio id="bg-audio" loop>
     <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
 </audio>
 
 <div class="container">
     
-    <!-- Barra de Status Profissional -->
+    <!-- Banner de Urgência -->
+    <div class="urgency-banner">
+        🔥 PROMOÇÃO DE INAUGURAÇÃO! POUCO ESTOQUE RESTANTE!
+    </div>
+
     <div class="status-bar">
         <div class="status-indicator">
             <span class="status-dot"></span>
-            <span>Sistema: <strong>ONLINE</strong></span>
+            <span>BOT DE ENTREGA: <strong>ONLINE</strong></span>
         </div>
         <div>
-            <span>🔥 <strong>24+</strong> entregas hoje</span>
+            <span>⚡ Envio Instantâneo</span>
         </div>
     </div>
 
-    <!-- Player de Música -->
     <div class="music-player">
-        <span>🎵 Música ambiente da Loja</span>
+        <span>🎵 Música Gamer</span>
         <button class="music-btn" id="btn-music-toggle">Play ▶</button>
     </div>
 
@@ -383,18 +474,18 @@
     <div id="screen-login">
         <h2>Entrar na Loja</h2>
         <div class="form-group">
-            <label>E-mail</label>
+            <label>E-mail do Cliente</label>
             <input type="email" id="login-email" placeholder="seuemail@exemplo.com" required>
         </div>
         <div class="form-group">
             <label>Senha</label>
-            <input type="password" id="login-password" placeholder="Sua senha" required>
+            <input type="password" id="login-password" placeholder="Crie uma senha" required>
         </div>
         <div class="form-group">
             <label>Código Especial (Se tiver)</label>
             <input type="text" id="login-code" placeholder="Código de Criador">
         </div>
-        <button id="btn-login">Acessar Loja</button>
+        <button id="btn-login">Entrar na Vitrine</button>
     </div>
 
     <!-- TELA 2: VITRINE DA LOJA -->
@@ -402,77 +493,79 @@
         <div id="creator-indicator" class="creator-badge hidden">Modo Criador Ativo</div>
         
         <h2>Vitrine de Contas</h2>
-        <p id="welcome-msg" style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; text-align: center;"></p>
+        <p id="welcome-msg" style="color: var(--text); font-size: 0.85rem; margin-bottom: 20px; text-align: center;"></p>
 
         <!-- Twisted -->
         <div class="item-card out-of-stock" id="card-twisted">
             <div class="item-badge" id="badge-twisted">Carregando...</div>
-            <h3 style="text-align: left; margin-bottom: 5px;">Conta Twisted (1 Milhão)</h3>
-            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px;">Acesso imediato após o pagamento.</p>
+            <h3 style="text-align: left; margin-bottom: 5px; font-size: 1.1rem; color: #fff;">Conta Twisted (1 Milhão)</h3>
+            <p style="font-size: 0.8rem; color: var(--text); margin-bottom: 12px;">Com dinheiro e itens raros no jogo Twisted!</p>
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
                     <span class="price" id="price-twisted">R$ 10,00</span>
                 </div>
-                <button style="width: auto; padding: 8px 15px;" id="btn-buy-twisted" disabled>Comprar</button>
+                <button style="width: auto; padding: 8px 15px; background: linear-gradient(135deg, var(--secondary), #2980b9); box-shadow: var(--glow-blue);" id="btn-buy-twisted" disabled>Comprar</button>
             </div>
         </div>
 
         <!-- Helicity -->
         <div class="item-card out-of-stock" id="card-helicity">
             <div class="item-badge" id="badge-helicity">Carregando...</div>
-            <h3 style="text-align: left; margin-bottom: 5px;">Conta Helicity (600 Mil)</h3>
-            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px;">Acesso imediato após o pagamento.</p>
+            <h3 style="text-align: left; margin-bottom: 5px; font-size: 1.1rem; color: #fff;">Conta Helicity (600 Mil)</h3>
+            <p style="font-size: 0.8rem; color: var(--text); margin-bottom: 12px;">Com coins prontos para gastar em itens raros!</p>
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
                     <span class="price" id="price-helicity">R$ 7,99</span>
                 </div>
-                <button style="width: auto; padding: 8px 15px;" id="btn-buy-helicity" disabled>Comprar</button>
+                <button style="width: auto; padding: 8px 15px; background: linear-gradient(135deg, var(--secondary), #2980b9); box-shadow: var(--glow-blue);" id="btn-buy-helicity" disabled>Comprar</button>
             </div>
         </div>
 
-        <!-- Botões de Navegação da Vitrine -->
-        <button id="btn-view-history" style="background: #34495e; margin-top: 15px;">💼 Minhas Compras</button>
-        <button id="btn-to-admin" class="hidden" style="background: #f1c40f; color: black; margin-top: 15px;">Ir ao Painel de Estoque</button>
-        <button id="btn-logout" style="background: transparent; border: 1px solid #3a3a4a; margin-top: 10px;">Sair</button>
+        <button id="btn-view-history" style="background: #34495e; box-shadow: none; margin-top: 15px;">💼 Minhas Compras</button>
+        <button id="btn-to-admin" class="hidden" style="background: #f1c40f; color: black; box-shadow: none; margin-top: 15px;">Ir ao Painel de Estoque</button>
+        
+        <!-- Botão Suporte WhatsApp (Ideal para tirar dúvidas de pais/clientes de 9-14 anos) -->
+        <button class="btn-support" id="btn-whatsapp-support">💬 SUPORTE / FALE COMIGO</button>
+        
+        <button id="btn-logout" style="background: transparent; border: 1px solid rgba(255,255,255,0.1); box-shadow: none; margin-top: 15px;">Sair da Loja</button>
 
-        <!-- SEÇÃO DE DEPOIMENTOS (AVALIAÇÕES) -->
+        <!-- SEÇÃO COMO FUNCIONA -->
+        <div class="tutorial-section">
+            <h3>Como funciona? 📖</h3>
+            <div class="step-item">
+                <span class="step-number">1</span>
+                <p>Escolha a conta desejada e clique em <strong>Comprar</strong>.</p>
+            </div>
+            <div class="step-item">
+                <span class="step-number">2</span>
+                <p>Faça o pagamento via Pix de forma 100% segura.</p>
+            </div>
+            <div class="step-item">
+                <span class="step-number">3</span>
+                <p>Após pagar, clique em <strong>Confirmar</strong> e o Usuário/Senha aparece na sua tela na hora!</p>
+            </div>
+        </div>
+
         <div class="reviews-section">
-            <h3>Feedback dos Compradores ⭐</h3>
-            
+            <h3>Avaliações de Clientes ⭐</h3>
             <div class="review-card">
                 <div class="review-header">
-                    <strong>@Pedro_Gamer</strong>
+                    <strong>@RobloxPro_99</strong>
                     <span class="stars">⭐⭐⭐⭐⭐</span>
                 </div>
-                <p class="review-text">"Comprei a Twisted e o login apareceu na hora! Muito rápido."</p>
-            </div>
-
-            <div class="review-card">
-                <div class="review-header">
-                    <strong>@JuliaSilva</strong>
-                    <span class="stars">⭐⭐⭐⭐⭐</span>
-                </div>
-                <p class="review-text">"Vendedor super atencioso, recomendo demais a loja!"</p>
+                <p class="review-text">"Muito top! Comprei a Twisted de R$ 10,00 e o bot me deu a senha na hora."</p>
             </div>
         </div>
 
-        <!-- PERGUNTAS FREQUENTES (FAQ) -->
         <div class="faq-section">
-            <h3>Dúvidas Frequentes 🤔</h3>
-            
+            <h3>Perguntas Frequentes ❓</h3>
             <div class="faq-item">
-                <div class="faq-question">Como vou receber a minha conta? <span></span></div>
-                <div class="faq-answer">Assim que o pagamento do Pix for confirmado, a conta (Usuário e Senha) é exibida na hora na sua tela e também fica salva na sua aba "Minhas Compras"!</div>
+                <div class="faq-question">É seguro mesmo? <span></span></div>
+                <div class="faq-answer">Sim! Nós somos uma loja verificada e as contas são entregues automaticamente pelo nosso bot na hora que você paga!</div>
             </div>
-
             <div class="faq-item">
-                <div class="faq-question">Posso trocar a senha ao receber? <span></span></div>
-                <div class="faq-answer">Sim! Recomendamos que altere a senha e adicione suas informações de segurança logo após o primeiro acesso.</div>
-            </div>
-
-            <div class="faq-item">
-                <div class="faq-question">Tem garantia? <span></span></div>
-                <div class="faq-answer">Sim! Oferecemos suporte total caso ocorra algum problema no login inicial da conta recebida.</div>
+                <div class="faq-question">Posso colocar meu próprio e-mail na conta Roblox? <span></span></div>
+                <div class="faq-answer">Sim! Assim que receber o usuário e a senha, recomendamos que entre no Roblox, mude a senha e coloque seu próprio e-mail para ela ser 100% sua.</div>
             </div>
         </div>
     </div>
@@ -491,7 +584,7 @@
         </div>
 
         <div class="form-group">
-            <label>Nome do Usuário / E-mail da Conta</label>
+            <label>Nome do Usuário</label>
             <input type="text" id="new-account-user" placeholder="Ex: jogador_twisted10">
         </div>
 
@@ -500,50 +593,56 @@
             <input type="text" id="new-account-pass" placeholder="Ex: senhaSegura123">
         </div>
 
-        <button id="btn-add-account" style="background: var(--success); margin-bottom: 10px;">Adicionar ao Banco Firebase</button>
-        <button id="btn-back-store" style="background: #3a3a4a;">Voltar para a Loja</button>
+        <button id="btn-add-account" style="background: var(--success); box-shadow: none; margin-bottom: 15px;">Adicionar ao Banco Firebase</button>
+
+        <h3 style="margin-top: 20px; font-size: 1rem; text-align: left;">Estoque Atual no Firebase:</h3>
+        <div class="stock-manager" id="stock-manager-list">
+            <p style="color: var(--text); font-size: 0.8rem; text-align: center;">Carregando banco...</p>
+        </div>
+
+        <button id="btn-back-store" style="background: #3a3a4a; box-shadow: none; margin-top: 20px;">Voltar para a Loja</button>
     </div>
 
     <!-- TELA 4: HISTÓRICO DE CONTAS COMPRADAS -->
     <div id="screen-history" class="hidden">
         <h2>Minhas Contas Compradas</h2>
         <div id="history-list" class="purchase-history">
-            <p style="color: var(--text-muted); text-align: center;">Nenhuma conta comprada nesta sessão ainda.</p>
+            <p style="color: var(--text); text-align: center;">Nenhuma conta comprada nesta sessão ainda.</p>
         </div>
-        <button id="btn-back-from-history" style="background: #3a3a4a; margin-top: 20px;">Voltar à Loja</button>
+        <button id="btn-back-from-history" style="background: #3a3a4a; box-shadow: none; margin-top: 20px;">Voltar à Loja</button>
     </div>
 </div>
 
 <!-- MODAL DE CHECKOUT REAL (MERCADO PAGO) -->
 <div id="modal-payment" class="modal hidden">
     <div class="modal-content">
-        <h3>Pagar com Pix Real</h3>
-        <p id="payment-text" style="font-size: 0.9rem; margin-bottom: 20px; color: var(--text-muted);"></p>
+        <h3>Pagar com Pix</h3>
+        <p id="payment-text" style="font-size: 0.9rem; margin-bottom: 20px; color: var(--text);"></p>
         
-        <button class="payment-option" id="btn-goto-mercadopago" style="background: #009ee3; display: flex; align-items: center; justify-content: center; gap: 10px;">
-            🛒 Ir para o Pagamento Seguro
+        <button class="payment-option" id="btn-goto-mercadopago" style="background: #009ee3; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: none;">
+            🛒 Pagar via Mercado Pago Seguro
         </button>
-        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 10px;">Após concluir o pagamento, retorne aqui e clique em "Confirmar Entrega".</p>
+        <p style="font-size: 0.75rem; color: var(--text); margin-top: 12px;">Após concluir o Pix, volte aqui e clique em <strong>Confirmar Entrega</strong> abaixo.</p>
         
-        <button id="btn-confirm-delivery" style="background: var(--success); margin-top: 15px;">✔️ Confirmar Entrega</button>
-        <button id="btn-cancel-pay" style="background: transparent; color: var(--danger); margin-top: 10px;">Cancelar</button>
+        <button id="btn-confirm-delivery" style="background: var(--success); margin-top: 15px; box-shadow: none;">✔️ Confirmar Entrega</button>
+        <button id="btn-cancel-pay" style="background: transparent; color: var(--danger); box-shadow: none; margin-top: 10px;">Cancelar</button>
     </div>
 </div>
 
-<!-- MODAL DE ENTREGA DA CONTA -->
+<!-- MODAL DE ENTREGA -->
 <div id="modal-delivery" class="modal hidden">
     <div class="modal-content">
-        <h3 style="color: var(--success);">🎉 Entrega de Conta</h3>
-        <p style="font-size: 0.9rem; margin-bottom: 15px;">Os dados abaixo saíram do estoque e foram salvos no seu histórico:</p>
-        <div style="background: #27ae6020; border: 2px dashed var(--success); padding: 15px; border-radius: 8px; margin-top: 15px; text-align: left;">
-            <p><strong>Usuário:</strong> <span id="delivered-user">...</span></p>
-            <p><strong>Senha:</strong> <span id="delivered-pass">...</span></p>
+        <h3 style="color: var(--success);">🎉 SUA CONTA CHEGOU!</h3>
+        <p style="font-size: 0.85rem; margin-bottom: 15px;">Guarde esses dados ou tire um print agora!</p>
+        <div style="background: rgba(46, 204, 113, 0.1); border: 2px dashed var(--success); padding: 15px; border-radius: 10px; text-align: left;">
+            <p><strong>Usuário Roblox:</strong> <span id="delivered-user" style="color: #fff; font-weight: bold;">...</span></p>
+            <p><strong>Senha:</strong> <span id="delivered-pass" style="color: #fff; font-weight: bold;">...</span></p>
         </div>
-        <button id="btn-close-delivery" style="margin-top: 20px; background: var(--success);">Fechar</button>
+        <p style="font-size: 0.75rem; color: var(--text); margin-top: 10px;">Estes dados também foram salvos na aba "Minhas Compras".</p>
+        <button id="btn-close-delivery" style="margin-top: 20px; background: var(--success); box-shadow: none;">Fechar e Jogar!</button>
     </div>
 </div>
 
-<!-- CONEXÃO COMPLETA COM O SEU FIREBASE -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -566,7 +665,7 @@
     let fetchedStock = { twisted: [], helicity: [] };
     let localHistory = [];
 
-    // Lógica das Perguntas Frequentes (FAQ Sanfonado)
+    // Lógica do FAQ
     const faqItems = document.querySelectorAll('.faq-item');
     faqItems.forEach(item => {
         const question = item.querySelector('.faq-question');
@@ -579,7 +678,7 @@
         });
     });
 
-    // Controle do Player de Música
+    // Controle de Música
     const bgAudio = document.getElementById('bg-audio');
     const musicBtn = document.getElementById('btn-music-toggle');
     let isPlaying = false;
@@ -589,13 +688,13 @@
             bgAudio.pause();
             musicBtn.innerText = "Play ▶";
         } else {
-            bgAudio.play().catch(e => console.log("A reprodução automática precisa de interação inicial."));
+            bgAudio.play().catch(e => console.log("Áudio ativado"));
             musicBtn.innerText = "Pause ⏸";
         }
         isPlaying = !isPlaying;
     });
 
-    // Carregar estoque do banco de dados em tempo real
+    // Carregar estoque do Firebase
     async function loadStockFromFirebase() {
         try {
             fetchedStock.twisted = [];
@@ -612,46 +711,94 @@
             });
 
             renderStore();
+            renderStockManager();
         } catch (error) {
             console.error("Erro ao carregar estoque: ", error);
         }
     }
 
-    // Renderizar interface
+    window.addEventListener('DOMContentLoaded', () => {
+        loadStockFromFirebase();
+    });
+
+    // Renderizar Vitrine
     function renderStore() {
-        // Atualizar Twisted
         const tCount = fetchedStock.twisted.length;
         const tCard = document.getElementById('card-twisted');
         const tBadge = document.getElementById('badge-twisted');
         const tBtn = document.getElementById('btn-buy-twisted');
         if(tCount > 0) {
             tCard.classList.remove('out-of-stock');
-            tBadge.innerText = `${tCount} disponíveis`;
+            tBadge.innerText = `${tCount} DISPONÍVEIS`;
             tBadge.style.background = 'var(--success)';
             tBtn.removeAttribute('disabled');
         } else {
             tCard.classList.add('out-of-stock');
-            tBadge.innerText = 'Fora de Estoque';
+            tBadge.innerText = 'ESGOTADO';
             tBadge.style.background = 'var(--danger)';
             tBtn.setAttribute('disabled', 'true');
         }
 
-        // Atualizar Helicity
         const hCount = fetchedStock.helicity.length;
         const hCard = document.getElementById('card-helicity');
         const hBadge = document.getElementById('badge-helicity');
         const hBtn = document.getElementById('btn-buy-helicity');
         if(hCount > 0) {
             hCard.classList.remove('out-of-stock');
-            hBadge.innerText = `${hCount} disponíveis`;
+            hBadge.innerText = `${hCount} DISPONÍVEIS`;
             hBadge.style.background = 'var(--success)';
             hBtn.removeAttribute('disabled');
         } else {
             hCard.classList.add('out-of-stock');
-            hBadge.innerText = 'Fora de Estoque';
+            hBadge.innerText = 'ESGOTADO';
             hBadge.style.background = 'var(--danger)';
             hBtn.setAttribute('disabled', 'true');
         }
+    }
+
+    // Renderizar Gerenciador de Estoque
+    function renderStockManager() {
+        const managerList = document.getElementById('stock-manager-list');
+        managerList.innerHTML = '';
+
+        const allStock = [
+            ...fetchedStock.twisted.map(item => ({ ...item, tipo: 'twisted' })),
+            ...fetchedStock.helicity.map(item => ({ ...item, tipo: 'helicity' }))
+        ];
+
+        if(allStock.length === 0) {
+            managerList.innerHTML = '<p style="color: var(--text); font-size: 0.8rem; text-align: center;">Nenhuma conta cadastrada.</p>';
+            return;
+        }
+
+        allStock.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'stock-manage-item';
+            div.innerHTML = `
+                <div>
+                    <strong>[${item.tipo.toUpperCase()}]</strong> ${item.user}
+                </div>
+                <button class="btn-delete-stock" data-id="${item.id}" data-tipo="${item.tipo}">Apagar</button>
+            `;
+            managerList.appendChild(div);
+        });
+
+        document.querySelectorAll('.btn-delete-stock').forEach(button => {
+            button.addEventListener('click', async (e) => {
+                const id = e.target.getAttribute('data-id');
+                const tipo = e.target.getAttribute('data-tipo');
+                const targetCollection = tipo === 'twisted' ? 'stock_twisted' : 'stock_helicity';
+
+                if(confirm(`Remover do banco de dados?`)) {
+                    try {
+                        await deleteDoc(doc(db, targetCollection, id));
+                        await loadStockFromFirebase();
+                    } catch (err) {
+                        alert('Erro ao apagar do banco.');
+                    }
+                }
+            });
+        });
     }
 
     // Login Event
@@ -665,12 +812,12 @@
             userType = 'criador';
             document.getElementById('creator-indicator').classList.remove('hidden');
             document.getElementById('btn-to-admin').classList.remove('hidden');
-            document.getElementById('welcome-msg').innerText = "Modo Criador Logado!";
+            document.getElementById('welcome-msg').innerText = "Painel do Dono Logado!";
         } else {
             userType = 'cliente';
             document.getElementById('creator-indicator').classList.add('hidden');
             document.getElementById('btn-to-admin').classList.add('hidden');
-            document.getElementById('welcome-msg').innerText = `Cliente: ${email}`;
+            document.getElementById('welcome-msg').innerText = `Jogador: ${email}`;
         }
 
         document.getElementById('screen-login').classList.add('hidden');
@@ -678,13 +825,13 @@
         loadStockFromFirebase();
     });
 
-    // Salvar nova conta no Firebase (Consertado e Atualizado!)
+    // Salvar nova conta
     document.getElementById('btn-add-account').addEventListener('click', async () => {
         const type = document.getElementById('new-account-type').value;
         const user = document.getElementById('new-account-user').value.trim();
         const pass = document.getElementById('new-account-pass').value.trim();
 
-        if(!user || !pass) return alert('Insira o usuário e a senha da conta!');
+        if(!user || !pass) return alert('Insira usuário e senha!');
 
         try {
             const collectionName = type === 'twisted' ? 'stock_twisted' : 'stock_helicity';
@@ -694,20 +841,17 @@
                 dateAdded: new Date()
             });
 
-            alert('Conta salva com sucesso!');
             document.getElementById('new-account-user').value = '';
             document.getElementById('new-account-pass').value = '';
             
-            document.getElementById('screen-creator').classList.add('hidden');
-            document.getElementById('screen-store').classList.remove('hidden');
             await loadStockFromFirebase();
+            alert('Adicionado com sucesso!');
         } catch (e) {
-            console.error("Erro ao adicionar:", e);
-            alert('Erro ao salvar no banco. Verifique as regras do Firebase.');
+            alert('Erro ao salvar no banco.');
         }
     });
 
-    // Fluxo de Compra Seguro
+    // Fluxo de Entrega Automática
     async function executeSecurePurchase() {
         document.getElementById('modal-payment').classList.add('hidden');
         const targetCollection = currentPurchaseType === 'twisted' ? 'stock_twisted' : 'stock_helicity';
@@ -737,16 +881,14 @@
             await loadStockFromFirebase();
             updateHistoryUI();
         } catch (error) {
-            console.error(error);
-            alert('Houve um erro no processamento seguro da compra.');
+            alert('Erro no processamento.');
         }
     }
 
-    // Atualizar visualização do Histórico
     function updateHistoryUI() {
         const list = document.getElementById('history-list');
         if (localHistory.length === 0) {
-            list.innerHTML = `<p style="text-align: center; color: var(--text-muted);">Nenhuma conta comprada nesta sessão ainda.</p>`;
+            list.innerHTML = `<p style="text-align: center; color: var(--text);">Nenhuma conta comprada nesta sessão ainda.</p>`;
             return;
         }
 
@@ -758,13 +900,12 @@
                 <p><strong>Tipo:</strong> ${item.tipo.toUpperCase()}</p>
                 <p><strong>Usuário:</strong> ${item.user}</p>
                 <p><strong>Senha:</strong> ${item.pass}</p>
-                <p style="font-size:0.75rem; color:var(--text-muted); margin-top: 5px;">Adquirido às ${item.data}</p>
+                <p style="font-size:0.75rem; color:var(--text); margin-top: 5px;">Adquirido às ${item.data}</p>
             `;
             list.appendChild(div);
         });
     }
 
-    // Gatilhos de Compra
     document.getElementById('btn-buy-twisted').addEventListener('click', () => {
         currentPurchaseType = 'twisted';
         document.getElementById('payment-text').innerText = "Conta Twisted (1M) - Valor: R$ 10,00";
@@ -777,17 +918,21 @@
         document.getElementById('modal-payment').classList.remove('hidden');
     });
 
-    // Link do Mercado Pago que você vai configurar
+    // Evento de Suporte WhatsApp (Insira seu número com DDD aqui)
+    document.getElementById('btn-whatsapp-support').addEventListener('click', () => {
+        // Exemplo de link para o seu WhatsApp (Troque o número abaixo pelo seu!)
+        window.open('https://wa.me/5547999999999?text=Olá,%20tenho%20uma%20dúvida%20sobre%20as%20contas%20da%20loja!', '_blank');
+    });
+
+    // Link do Mercado Pago
     document.getElementById('btn-goto-mercadopago').addEventListener('click', () => {
         window.open('https://link.mercadopago.com.br/seulinkdepagamento', '_blank');
     });
 
-    // Confirmar entrega após pagar
     document.getElementById('btn-confirm-delivery').addEventListener('click', () => {
         executeSecurePurchase();
     });
 
-    // Navegação geral
     document.getElementById('btn-cancel-pay').addEventListener('click', () => document.getElementById('modal-payment').classList.add('hidden'));
     document.getElementById('btn-close-delivery').addEventListener('click', () => document.getElementById('modal-delivery').classList.add('hidden'));
     
