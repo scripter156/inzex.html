@@ -243,6 +243,13 @@
             text-shadow: 0 0 5px rgba(46, 204, 113, 0.3);
         }
 
+        .old-price {
+            text-decoration: line-through;
+            color: var(--danger);
+            font-size: 0.95rem;
+            margin-right: 8px;
+        }
+
         .creator-badge {
             background: #f1c40f;
             color: black;
@@ -440,6 +447,16 @@
             font-size: 0.8rem;
             border-left: 3px solid var(--success);
         }
+
+        /* Painel Admin Switch */
+        .promo-switch-container {
+            background: rgba(0,0,0,0.4);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px dashed #f1c40f;
+            margin-bottom: 20px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -451,7 +468,7 @@
 <div class="container">
     
     <!-- Banner de Urgência -->
-    <div class="urgency-banner">
+    <div class="urgency-banner" id="announcement-banner">
         🔥 PROMOÇÃO DE INAUGURAÇÃO! POUCO ESTOQUE RESTANTE!
     </div>
 
@@ -502,6 +519,7 @@
             <p style="font-size: 0.8rem; color: var(--text); margin-bottom: 12px;">Com dinheiro e itens raros no jogo Twisted!</p>
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
+                    <span class="old-price hidden" id="old-price-twisted">R$ 10,00</span>
                     <span class="price" id="price-twisted">R$ 10,00</span>
                 </div>
                 <button style="width: auto; padding: 8px 15px; background: linear-gradient(135deg, var(--secondary), #2980b9); box-shadow: var(--glow-blue);" id="btn-buy-twisted" disabled>Comprar</button>
@@ -515,6 +533,7 @@
             <p style="font-size: 0.8rem; color: var(--text); margin-bottom: 12px;">Com coins prontos para gastar em itens raros!</p>
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
+                    <span class="old-price hidden" id="old-price-helicity">R$ 7,99</span>
                     <span class="price" id="price-helicity">R$ 7,99</span>
                 </div>
                 <button style="width: auto; padding: 8px 15px; background: linear-gradient(135deg, var(--secondary), #2980b9); box-shadow: var(--glow-blue);" id="btn-buy-helicity" disabled>Comprar</button>
@@ -570,9 +589,17 @@
         </div>
     </div>
 
-    <!-- TELA 3: PAINEL DO CRIADOR -->
+    <!-- TELA 3: PAINEL DO CRIADOR (ADMIN) -->
     <div id="screen-creator" class="hidden">
-        <h2>Painel de Estoque</h2>
+        <h2>Painel do Dono</h2>
+        
+        <!-- BOTAO DE CONTROLE DA PROMOÇÃO (EXCLUSIVO CRIADOR) -->
+        <div class="promo-switch-container">
+            <h4 style="color:#f1c40f; margin-bottom: 10px;">⚡ Sistema de Descontos</h4>
+            <button id="btn-toggle-promo" style="background: var(--danger); box-shadow: none;">Ativar Promoção (50% OFF)</button>
+            <p id="promo-status-text" style="font-size: 0.75rem; margin-top: 8px; color: var(--text);">Estado atual: Inativa</p>
+        </div>
+
         <div class="creator-badge">Adicionar Novas Contas no Banco</div>
 
         <div class="form-group">
@@ -645,7 +672,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBFd1LlyUBZYd4V40YsArH0Qr0-IjTkEHo",
@@ -664,6 +691,9 @@
     let currentPurchaseType = '';
     let fetchedStock = { twisted: [], helicity: [] };
     let localHistory = [];
+    
+    // Variável para gerenciar a promoção ativa ou não globalmente
+    let isPromoActive = false;
 
     // Lógica do FAQ
     const faqItems = document.querySelectorAll('.faq-item');
@@ -694,6 +724,63 @@
         isPlaying = !isPlaying;
     });
 
+    // Escutar promoção em tempo real do Firebase
+    function listenToPromoState() {
+        onSnapshot(doc(db, "config_promo", "status"), (docSnap) => {
+            if (docSnap.exists()) {
+                isPromoActive = docSnap.data().active || false;
+            } else {
+                isPromoActive = false;
+            }
+            applyPricesUI();
+        });
+    }
+
+    // Altera os preços visualmente e o comportamento de pagamento
+    function applyPricesUI() {
+        const pTwisted = document.getElementById('price-twisted');
+        const oldPTwisted = document.getElementById('old-price-twisted');
+        const pHelicity = document.getElementById('price-helicity');
+        const oldPHelicity = document.getElementById('old-price-helicity');
+        const banner = document.getElementById('announcement-banner');
+        const btnTogglePromo = document.getElementById('btn-toggle-promo');
+        const promoStatusText = document.getElementById('promo-status-text');
+
+        if (isPromoActive) {
+            // Layout da vitrine em promoção
+            pTwisted.innerText = "R$ 5,00";
+            pTwisted.style.color = "var(--success)";
+            oldPTwisted.classList.remove('hidden');
+
+            pHelicity.innerText = "R$ 4,99";
+            pHelicity.style.color = "var(--success)";
+            oldPHelicity.classList.remove('hidden');
+
+            banner.innerText = "⚡ PROMOÇÃO DE 50% OFF ATIVADA! COMPRE AGORA!";
+            banner.style.background = "linear-gradient(90deg, #9b59b6, var(--success))";
+
+            // Atualiza botões no painel admin
+            btnTogglePromo.innerText = "Desativar Promoção";
+            btnTogglePromo.style.background = "var(--danger)";
+            promoStatusText.innerText = "Estado atual: ATIVADA (R$ 5,00 / R$ 4,99)";
+        } else {
+            // Layout normal
+            pTwisted.innerText = "R$ 10,00";
+            oldPTwisted.classList.add('hidden');
+
+            pHelicity.innerText = "R$ 7,99";
+            oldPHelicity.classList.add('hidden');
+
+            banner.innerText = "🔥 PROMOÇÃO DE INAUGURAÇÃO! POUCO ESTOQUE RESTANTE!";
+            banner.style.background = "linear-gradient(90deg, var(--danger), #f39c12)";
+
+            // Atualiza botões no painel admin
+            btnTogglePromo.innerText = "Ativar Promoção";
+            btnTogglePromo.style.background = "var(--success)";
+            promoStatusText.innerText = "Estado atual: INATIVA (R$ 10,00 / R$ 7,99)";
+        }
+    }
+
     // Carregar estoque do Firebase
     async function loadStockFromFirebase() {
         try {
@@ -719,6 +806,7 @@
 
     window.addEventListener('DOMContentLoaded', () => {
         loadStockFromFirebase();
+        listenToPromoState();
     });
 
     // Renderizar Vitrine
@@ -851,6 +939,21 @@
         }
     });
 
+    // Lógica do criador para Ativar / Desativar a Promoção no Firebase
+    document.getElementById('btn-toggle-promo').addEventListener('click', async () => {
+        try {
+            const novoEstado = !isPromoActive;
+            await setDoc(doc(db, "config_promo", "status"), {
+                active: novoEstado,
+                updatedAt: new Date()
+            });
+            alert(novoEstado ? 'Promoção ATIVADA para todos os clientes!' : 'Promoção DESATIVADA para todos os clientes!');
+        } catch (e) {
+            console.error(e);
+            alert('Erro ao salvar alteração de promoção no banco de dados.');
+        }
+    });
+
     // Fluxo de Entrega Automática
     async function executeSecurePurchase() {
         document.getElementById('modal-payment').classList.add('hidden');
@@ -908,13 +1011,15 @@
 
     document.getElementById('btn-buy-twisted').addEventListener('click', () => {
         currentPurchaseType = 'twisted';
-        document.getElementById('payment-text').innerText = "Conta Twisted (1M) - Valor: R$ 10,00";
+        const preco = isPromoActive ? "R$ 5,00" : "R$ 10,00";
+        document.getElementById('payment-text').innerText = `Conta Twisted (1M) - Valor: ${preco}`;
         document.getElementById('modal-payment').classList.remove('hidden');
     });
 
     document.getElementById('btn-buy-helicity').addEventListener('click', () => {
         currentPurchaseType = 'helicity';
-        document.getElementById('payment-text').innerText = "Conta Helicity (600k) - Valor: R$ 7,99";
+        const preco = isPromoActive ? "R$ 4,99" : "R$ 7,99";
+        document.getElementById('payment-text').innerText = `Conta Helicity (600k) - Valor: ${preco}`;
         document.getElementById('modal-payment').classList.remove('hidden');
     });
 
