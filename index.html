@@ -14,6 +14,7 @@
             --text-muted: #a0a0b0;
             --success: #00b894;
             --danger: #d63031;
+            --glow: 0 0 15px rgba(108, 92, 231, 0.5);
         }
 
         * {
@@ -33,20 +34,91 @@
             padding: 20px;
         }
 
+        /* Efeito de borda neon animada no container */
         .container {
             width: 100%;
             max-width: 480px;
             background: var(--card-bg);
             border-radius: 16px;
             padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5), var(--glow);
+            border: 1px solid rgba(108, 92, 231, 0.2);
             position: relative;
+            transition: border-color 0.3s ease;
+        }
+
+        /* Status do Servidor */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.8rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--success);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--success);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.4; }
+            50% { opacity: 1; }
+            100% { opacity: 0.4; }
+        }
+
+        /* Player de Música Estilizado */
+        .music-player {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .music-player span {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .music-btn {
+            background: var(--primary);
+            border: none;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            width: auto;
+            transition: transform 0.1s ease;
+        }
+
+        .music-btn:active {
+            transform: scale(0.95);
         }
 
         h2, h3 {
             margin-bottom: 20px;
             text-align: center;
             color: var(--primary);
+            text-shadow: 0 0 10px rgba(108, 92, 231, 0.3);
         }
 
         .hidden {
@@ -78,6 +150,7 @@
 
         input:focus, select:focus {
             border-color: var(--primary);
+            box-shadow: 0 0 8px rgba(108, 92, 231, 0.3);
         }
 
         button {
@@ -90,17 +163,22 @@
             font-weight: bold;
             font-size: 1rem;
             cursor: pointer;
-            transition: 0.3s;
+            transition: 0.2s ease, transform 0.1s ease;
         }
 
         button:hover {
             background: var(--secondary);
         }
 
+        button:active {
+            transform: scale(0.98);
+        }
+
         button:disabled {
             background: #3a3a4a;
             color: var(--text-muted);
             cursor: not-allowed;
+            transform: none !important;
         }
 
         .item-card {
@@ -110,6 +188,12 @@
             padding: 20px;
             margin-bottom: 15px;
             position: relative;
+            transition: 0.3s ease;
+        }
+
+        .item-card:hover {
+            border-color: var(--primary);
+            box-shadow: var(--glow);
         }
 
         .item-card.out-of-stock {
@@ -135,13 +219,6 @@
             color: var(--success);
         }
 
-        .old-price {
-            text-decoration: line-through;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            margin-right: 5px;
-        }
-
         .creator-badge {
             background: #f1c40f;
             color: black;
@@ -153,6 +230,89 @@
             font-size: 0.85rem;
         }
 
+        /* Seção de Depoimentos / Avaliações */
+        .reviews-section {
+            margin-top: 30px;
+            border-top: 1px solid #3a3a4a;
+            padding-top: 25px;
+        }
+
+        .review-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            margin-bottom: 6px;
+        }
+
+        .stars {
+            color: #f1c40f;
+        }
+
+        .review-text {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        /* FAQ Sanfonado */
+        .faq-section {
+            margin-top: 30px;
+            border-top: 1px solid #3a3a4a;
+            padding-top: 25px;
+        }
+
+        .faq-item {
+            border: 1px solid #3a3a4a;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            background: #15151a;
+            padding: 12px 15px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+        }
+
+        .faq-answer {
+            padding: 0 15px;
+            max-height: 0;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.01);
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 200px;
+            padding: 15px;
+        }
+
+        .faq-item.active .faq-question span::after {
+            content: ' ➖';
+        }
+
+        .faq-question span::after {
+            content: ' ➕';
+            font-size: 0.75rem;
+        }
+
+        /* Modal */
         .modal {
             position: fixed;
             top: 0;
@@ -176,39 +336,49 @@
             border: 1px solid #3a3a4a;
         }
 
-        .payment-option {
+        .purchase-history {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #3a3a4a;
+            text-align: left;
+        }
+
+        .history-item {
             background: #15151a;
-            border: 1px solid #3a3a4a;
-            width: 100%;
-            padding: 12px;
+            padding: 10px;
             border-radius: 8px;
             margin-bottom: 10px;
-            color: white;
-            text-align: left;
-            cursor: pointer;
-        }
-
-        .payment-option:hover {
-            border-color: var(--primary);
-        }
-
-        .result-box {
-            background: #27ae6020;
-            border: 2px dashed var(--success);
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 15px;
-            text-align: left;
-        }
-
-        .result-box strong {
-            color: var(--success);
+            font-size: 0.85rem;
+            border-left: 3px solid var(--success);
         }
     </style>
 </head>
 <body>
 
+<!-- Áudio em segundo plano -->
+<audio id="bg-audio" loop>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+</audio>
+
 <div class="container">
+    
+    <!-- Barra de Status Profissional -->
+    <div class="status-bar">
+        <div class="status-indicator">
+            <span class="status-dot"></span>
+            <span>Sistema: <strong>ONLINE</strong></span>
+        </div>
+        <div>
+            <span>🔥 <strong>24+</strong> entregas hoje</span>
+        </div>
+    </div>
+
+    <!-- Player de Música -->
+    <div class="music-player">
+        <span>🎵 Música ambiente da Loja</span>
+        <button class="music-btn" id="btn-music-toggle">Play ▶</button>
+    </div>
+
     <!-- TELA 1: LOGIN -->
     <div id="screen-login">
         <h2>Entrar na Loja</h2>
@@ -241,7 +411,6 @@
             <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px;">Acesso imediato após o pagamento.</p>
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
-                    <span class="old-price hidden" id="old-price-twisted">R$ 10,00</span>
                     <span class="price" id="price-twisted">R$ 10,00</span>
                 </div>
                 <button style="width: auto; padding: 8px 15px;" id="btn-buy-twisted" disabled>Comprar</button>
@@ -255,15 +424,57 @@
             <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px;">Acesso imediato após o pagamento.</p>
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
-                    <span class="old-price hidden" id="old-price-helicity">R$ 7,99</span>
                     <span class="price" id="price-helicity">R$ 7,99</span>
                 </div>
                 <button style="width: auto; padding: 8px 15px;" id="btn-buy-helicity" disabled>Comprar</button>
             </div>
         </div>
 
+        <!-- Botões de Navegação da Vitrine -->
+        <button id="btn-view-history" style="background: #34495e; margin-top: 15px;">💼 Minhas Compras</button>
         <button id="btn-to-admin" class="hidden" style="background: #f1c40f; color: black; margin-top: 15px;">Ir ao Painel de Estoque</button>
         <button id="btn-logout" style="background: transparent; border: 1px solid #3a3a4a; margin-top: 10px;">Sair</button>
+
+        <!-- SEÇÃO DE DEPOIMENTOS (AVALIAÇÕES) -->
+        <div class="reviews-section">
+            <h3>Feedback dos Compradores ⭐</h3>
+            
+            <div class="review-card">
+                <div class="review-header">
+                    <strong>@Pedro_Gamer</strong>
+                    <span class="stars">⭐⭐⭐⭐⭐</span>
+                </div>
+                <p class="review-text">"Comprei a Twisted e o login apareceu na hora! Muito rápido."</p>
+            </div>
+
+            <div class="review-card">
+                <div class="review-header">
+                    <strong>@JuliaSilva</strong>
+                    <span class="stars">⭐⭐⭐⭐⭐</span>
+                </div>
+                <p class="review-text">"Vendedor super atencioso, recomendo demais a loja!"</p>
+            </div>
+        </div>
+
+        <!-- PERGUNTAS FREQUENTES (FAQ) -->
+        <div class="faq-section">
+            <h3>Dúvidas Frequentes 🤔</h3>
+            
+            <div class="faq-item">
+                <div class="faq-question">Como vou receber a minha conta? <span></span></div>
+                <div class="faq-answer">Assim que o pagamento do Pix for confirmado, a conta (Usuário e Senha) é exibida na hora na sua tela e também fica salva na sua aba "Minhas Compras"!</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Posso trocar a senha ao receber? <span></span></div>
+                <div class="faq-answer">Sim! Recomendamos que altere a senha e adicione suas informações de segurança logo após o primeiro acesso.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Tem garantia? <span></span></div>
+                <div class="faq-answer">Sim! Oferecemos suporte total caso ocorra algum problema no login inicial da conta recebida.</div>
+            </div>
+        </div>
     </div>
 
     <!-- TELA 3: PAINEL DO CRIADOR -->
@@ -274,8 +485,8 @@
         <div class="form-group">
             <label>Tipo de Conta</label>
             <select id="new-account-type">
-                <option value="twisted">Twisted (R$ 10,00)</option>
-                <option value="helicity">Helicity (R$ 7,99)</option>
+                <option value="twisted">twisted</option>
+                <option value="helicity">helicity</option>
             </select>
         </div>
 
@@ -292,15 +503,29 @@
         <button id="btn-add-account" style="background: var(--success); margin-bottom: 10px;">Adicionar ao Banco Firebase</button>
         <button id="btn-back-store" style="background: #3a3a4a;">Voltar para a Loja</button>
     </div>
+
+    <!-- TELA 4: HISTÓRICO DE CONTAS COMPRADAS -->
+    <div id="screen-history" class="hidden">
+        <h2>Minhas Contas Compradas</h2>
+        <div id="history-list" class="purchase-history">
+            <p style="color: var(--text-muted); text-align: center;">Nenhuma conta comprada nesta sessão ainda.</p>
+        </div>
+        <button id="btn-back-from-history" style="background: #3a3a4a; margin-top: 20px;">Voltar à Loja</button>
+    </div>
 </div>
 
-<!-- MODAL DE CHECKOUT -->
+<!-- MODAL DE CHECKOUT REAL (MERCADO PAGO) -->
 <div id="modal-payment" class="modal hidden">
     <div class="modal-content">
-        <h3>Finalizar Compra</h3>
+        <h3>Pagar com Pix Real</h3>
         <p id="payment-text" style="font-size: 0.9rem; margin-bottom: 20px; color: var(--text-muted);"></p>
-        <button class="payment-option" id="pay-pix">⚡ Pagar com Pix</button>
-        <button class="payment-option" id="pay-paypal">💳 Pagar com PayPal</button>
+        
+        <button class="payment-option" id="btn-goto-mercadopago" style="background: #009ee3; display: flex; align-items: center; justify-content: center; gap: 10px;">
+            🛒 Ir para o Pagamento Seguro
+        </button>
+        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 10px;">Após concluir o pagamento, retorne aqui e clique em "Confirmar Entrega".</p>
+        
+        <button id="btn-confirm-delivery" style="background: var(--success); margin-top: 15px;">✔️ Confirmar Entrega</button>
         <button id="btn-cancel-pay" style="background: transparent; color: var(--danger); margin-top: 10px;">Cancelar</button>
     </div>
 </div>
@@ -308,9 +533,9 @@
 <!-- MODAL DE ENTREGA DA CONTA -->
 <div id="modal-delivery" class="modal hidden">
     <div class="modal-content">
-        <h3 style="color: var(--success);">🎉 Compra Aprovada!</h3>
-        <p style="font-size: 0.9rem; margin-bottom: 15px;">Os dados abaixo saíram do banco e agora são seus:</p>
-        <div class="result-box">
+        <h3 style="color: var(--success);">🎉 Entrega de Conta</h3>
+        <p style="font-size: 0.9rem; margin-bottom: 15px;">Os dados abaixo saíram do estoque e foram salvos no seu histórico:</p>
+        <div style="background: #27ae6020; border: 2px dashed var(--success); padding: 15px; border-radius: 8px; margin-top: 15px; text-align: left;">
             <p><strong>Usuário:</strong> <span id="delivered-user">...</span></p>
             <p><strong>Senha:</strong> <span id="delivered-pass">...</span></p>
         </div>
@@ -321,9 +546,8 @@
 <!-- CONEXÃO COMPLETA COM O SEU FIREBASE -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // Suas credenciais oficiais inseridas com sucesso
     const firebaseConfig = {
       apiKey: "AIzaSyBFd1LlyUBZYd4V40YsArH0Qr0-IjTkEHo",
       authDomain: "minha-loja-contas.firebaseapp.com",
@@ -337,30 +561,43 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // Variáveis locais de controle
     let userType = null;
-    let promoActive = false;
     let currentPurchaseType = '';
     let fetchedStock = { twisted: [], helicity: [] };
+    let localHistory = [];
 
-    // Checar promoção automaticamente (Finais de semana - de 2 em 2 semanas)
-    function checkPromotion() {
-        const now = new Date();
-        const day = now.getDay();
-        const isWeekend = (day === 0 || day === 6);
-        if (isWeekend) {
-            const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 1)) / (24 * 60 * 60 * 1000));
-            const currentWeek = Math.floor(dayOfYear / 7);
-            promoActive = (currentWeek % 2 === 0);
+    // Lógica das Perguntas Frequentes (FAQ Sanfonado)
+    const faqItems = document.querySelectorAll('.faq-item');
+    faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question');
+        question.addEventListener('click', () => {
+            const activeItem = document.querySelector('.faq-item.active');
+            if (activeItem && activeItem !== item) {
+                activeItem.classList.remove('active');
+            }
+            item.classList.toggle('active');
+        });
+    });
+
+    // Controle do Player de Música
+    const bgAudio = document.getElementById('bg-audio');
+    const musicBtn = document.getElementById('btn-music-toggle');
+    let isPlaying = false;
+
+    musicBtn.addEventListener('click', () => {
+        if (isPlaying) {
+            bgAudio.pause();
+            musicBtn.innerText = "Play ▶";
         } else {
-            promoActive = false;
+            bgAudio.play().catch(e => console.log("A reprodução automática precisa de interação inicial."));
+            musicBtn.innerText = "Pause ⏸";
         }
-    }
+        isPlaying = !isPlaying;
+    });
 
     // Carregar estoque do banco de dados em tempo real
     async function loadStockFromFirebase() {
         try {
-            // Limpa estoque local antes de carregar
             fetchedStock.twisted = [];
             fetchedStock.helicity = [];
 
@@ -382,21 +619,6 @@
 
     // Renderizar interface
     function renderStore() {
-        checkPromotion();
-        const twistedPrice = promoActive ? 5.00 : 10.00;
-        const helicityPrice = promoActive ? 3.99 : 7.99;
-
-        document.getElementById('price-twisted').innerText = `R$ ${twistedPrice.toFixed(2).replace('.', ',')}`;
-        document.getElementById('price-helicity').innerText = `R$ ${helicityPrice.toFixed(2).replace('.', ',')}`;
-
-        if(promoActive) {
-            document.getElementById('old-price-twisted').classList.remove('hidden');
-            document.getElementById('old-price-helicity').classList.remove('hidden');
-        } else {
-            document.getElementById('old-price-twisted').classList.add('hidden');
-            document.getElementById('old-price-helicity').classList.add('hidden');
-        }
-
         // Atualizar Twisted
         const tCount = fetchedStock.twisted.length;
         const tCard = document.getElementById('card-twisted');
@@ -456,7 +678,7 @@
         loadStockFromFirebase();
     });
 
-    // Salvar nova conta no Firebase (Visão do Criador)
+    // Salvar nova conta no Firebase (Consertado e Atualizado!)
     document.getElementById('btn-add-account').addEventListener('click', async () => {
         const type = document.getElementById('new-account-type').value;
         const user = document.getElementById('new-account-user').value.trim();
@@ -472,19 +694,20 @@
                 dateAdded: new Date()
             });
 
-            alert('Conta salva com total segurança no banco de dados!');
+            alert('Conta salva com sucesso!');
             document.getElementById('new-account-user').value = '';
             document.getElementById('new-account-pass').value = '';
             
             document.getElementById('screen-creator').classList.add('hidden');
             document.getElementById('screen-store').classList.remove('hidden');
-            loadStockFromFirebase();
+            await loadStockFromFirebase();
         } catch (e) {
+            console.error("Erro ao adicionar:", e);
             alert('Erro ao salvar no banco. Verifique as regras do Firebase.');
         }
     });
 
-    // Fluxo de Compra Seguro (Pega o último item e deleta do banco na hora)
+    // Fluxo de Compra Seguro
     async function executeSecurePurchase() {
         document.getElementById('modal-payment').classList.add('hidden');
         const targetCollection = currentPurchaseType === 'twisted' ? 'stock_twisted' : 'stock_helicity';
@@ -495,53 +718,99 @@
             return;
         }
 
-        // Pega a ÚLTIMA conta da lista local
-        const targetAccount = currentStockList[currentStockList.length - 1];
+        const targetAccount = currentStockList[0];
 
         try {
-            // Remove do Firebase usando o ID único do documento antes de entregar
             await deleteDoc(doc(db, targetCollection, targetAccount.id));
 
-            // Exibe os dados na tela do comprador
+            localHistory.push({
+                tipo: currentPurchaseType,
+                user: targetAccount.user,
+                pass: targetAccount.pass,
+                data: new Date().toLocaleTimeString()
+            });
+
             document.getElementById('delivered-user').innerText = targetAccount.user;
             document.getElementById('delivered-pass').innerText = targetAccount.pass;
             document.getElementById('modal-delivery').classList.remove('hidden');
 
-            // Atualiza o estoque local na tela
-            loadStockFromFirebase();
+            await loadStockFromFirebase();
+            updateHistoryUI();
         } catch (error) {
-            alert('Houve um erro no processamento seguro da compra. Tente novamente.');
+            console.error(error);
+            alert('Houve um erro no processamento seguro da compra.');
         }
     }
 
-    // Gatilhos de compra
+    // Atualizar visualização do Histórico
+    function updateHistoryUI() {
+        const list = document.getElementById('history-list');
+        if (localHistory.length === 0) {
+            list.innerHTML = `<p style="text-align: center; color: var(--text-muted);">Nenhuma conta comprada nesta sessão ainda.</p>`;
+            return;
+        }
+
+        list.innerHTML = '';
+        localHistory.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'history-item';
+            div.innerHTML = `
+                <p><strong>Tipo:</strong> ${item.tipo.toUpperCase()}</p>
+                <p><strong>Usuário:</strong> ${item.user}</p>
+                <p><strong>Senha:</strong> ${item.pass}</p>
+                <p style="font-size:0.75rem; color:var(--text-muted); margin-top: 5px;">Adquirido às ${item.data}</p>
+            `;
+            list.appendChild(div);
+        });
+    }
+
+    // Gatilhos de Compra
     document.getElementById('btn-buy-twisted').addEventListener('click', () => {
         currentPurchaseType = 'twisted';
-        document.getElementById('payment-text').innerText = "Finalizar compra da Conta Twisted (1M)";
+        document.getElementById('payment-text').innerText = "Conta Twisted (1M) - Valor: R$ 10,00";
         document.getElementById('modal-payment').classList.remove('hidden');
     });
 
     document.getElementById('btn-buy-helicity').addEventListener('click', () => {
         currentPurchaseType = 'helicity';
-        document.getElementById('payment-text').innerText = "Finalizar compra da Conta Helicity (600k)";
+        document.getElementById('payment-text').innerText = "Conta Helicity (600k) - Valor: R$ 7,99";
         document.getElementById('modal-payment').classList.remove('hidden');
     });
 
-    // Ouvintes de pagamento simulado
-    document.getElementById('pay-pix').addEventListener('click', () => executeSecurePurchase());
-    document.getElementById('pay-paypal').addEventListener('click', () => executeSecurePurchase());
-    
-    // Fechar Modais e Navegação
+    // Link do Mercado Pago que você vai configurar
+    document.getElementById('btn-goto-mercadopago').addEventListener('click', () => {
+        window.open('https://link.mercadopago.com.br/seulinkdepagamento', '_blank');
+    });
+
+    // Confirmar entrega após pagar
+    document.getElementById('btn-confirm-delivery').addEventListener('click', () => {
+        executeSecurePurchase();
+    });
+
+    // Navegação geral
     document.getElementById('btn-cancel-pay').addEventListener('click', () => document.getElementById('modal-payment').classList.add('hidden'));
     document.getElementById('btn-close-delivery').addEventListener('click', () => document.getElementById('modal-delivery').classList.add('hidden'));
+    
+    document.getElementById('btn-view-history').addEventListener('click', () => {
+        document.getElementById('screen-store').classList.add('hidden');
+        document.getElementById('screen-history').classList.remove('hidden');
+    });
+
+    document.getElementById('btn-back-from-history').addEventListener('click', () => {
+        document.getElementById('screen-history').classList.add('hidden');
+        document.getElementById('screen-store').classList.remove('hidden');
+    });
+
     document.getElementById('btn-to-admin').addEventListener('click', () => {
         document.getElementById('screen-store').classList.add('hidden');
         document.getElementById('screen-creator').classList.remove('hidden');
     });
+
     document.getElementById('btn-back-store').addEventListener('click', () => {
         document.getElementById('screen-creator').classList.add('hidden');
         document.getElementById('screen-store').classList.remove('hidden');
     });
+
     document.getElementById('btn-logout').addEventListener('click', () => {
         document.getElementById('screen-store').classList.add('hidden');
         document.getElementById('screen-login').classList.remove('hidden');
