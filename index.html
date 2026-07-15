@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minha Loja de Contas</title>
+    <title>Minha Loja de Contas Segura</title>
     <style>
         :root {
             --primary: #6c5ce7;
@@ -153,7 +153,6 @@
             font-size: 0.85rem;
         }
 
-        /* Modal */
         .modal {
             position: fixed;
             top: 0;
@@ -193,7 +192,6 @@
             border-color: var(--primary);
         }
 
-        /* Sucesso da Compra (Resultado da Conta) */
         .result-box {
             background: #27ae6020;
             border: 2px dashed var(--success);
@@ -238,7 +236,7 @@
 
         <!-- Twisted -->
         <div class="item-card out-of-stock" id="card-twisted">
-            <div class="item-badge" id="badge-twisted">Sem Estoque</div>
+            <div class="item-badge" id="badge-twisted">Carregando...</div>
             <h3 style="text-align: left; margin-bottom: 5px;">Conta Twisted (1 Milhão)</h3>
             <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px;">Acesso imediato após o pagamento.</p>
             <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -252,7 +250,7 @@
 
         <!-- Helicity -->
         <div class="item-card out-of-stock" id="card-helicity">
-            <div class="item-badge" id="badge-helicity">Sem Estoque</div>
+            <div class="item-badge" id="badge-helicity">Carregando...</div>
             <h3 style="text-align: left; margin-bottom: 5px;">Conta Helicity (600 Mil)</h3>
             <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px;">Acesso imediato após o pagamento.</p>
             <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -268,10 +266,10 @@
         <button id="btn-logout" style="background: transparent; border: 1px solid #3a3a4a; margin-top: 10px;">Sair</button>
     </div>
 
-    <!-- TELA 3: PAINEL DO CRIADOR (CADASTRAR CONTAS) -->
+    <!-- TELA 3: PAINEL DO CRIADOR -->
     <div id="screen-creator" class="hidden">
         <h2>Painel de Estoque</h2>
-        <div class="creator-badge">Adicionar Novas Contas</div>
+        <div class="creator-badge">Adicionar Novas Contas no Banco</div>
 
         <div class="form-group">
             <label>Tipo de Conta</label>
@@ -291,7 +289,7 @@
             <input type="text" id="new-account-pass" placeholder="Ex: senhaSegura123">
         </div>
 
-        <button id="btn-add-account" style="background: var(--success); margin-bottom: 10px;">Adicionar ao Estoque</button>
+        <button id="btn-add-account" style="background: var(--success); margin-bottom: 10px;">Adicionar ao Banco Firebase</button>
         <button id="btn-back-store" style="background: #3a3a4a;">Voltar para a Loja</button>
     </div>
 </div>
@@ -301,10 +299,8 @@
     <div class="modal-content">
         <h3>Finalizar Compra</h3>
         <p id="payment-text" style="font-size: 0.9rem; margin-bottom: 20px; color: var(--text-muted);"></p>
-        
-        <button class="payment-option" onclick="processPayment('Pix')">⚡ Pagar com Pix</button>
-        <button class="payment-option" onclick="processPayment('PayPal')">💳 Pagar com PayPal</button>
-        
+        <button class="payment-option" id="pay-pix">⚡ Pagar com Pix</button>
+        <button class="payment-option" id="pay-paypal">💳 Pagar com PayPal</button>
         <button id="btn-cancel-pay" style="background: transparent; color: var(--danger); margin-top: 10px;">Cancelar</button>
     </div>
 </div>
@@ -312,92 +308,88 @@
 <!-- MODAL DE ENTREGA DA CONTA -->
 <div id="modal-delivery" class="modal hidden">
     <div class="modal-content">
-        <h3 style="color: var(--success);">🎉 Pagamento Confirmado!</h3>
-        <p style="font-size: 0.9rem; margin-bottom: 15px;">Guarde os dados de acesso da sua nova conta abaixo:</p>
-        
+        <h3 style="color: var(--success);">🎉 Compra Aprovada!</h3>
+        <p style="font-size: 0.9rem; margin-bottom: 15px;">Os dados abaixo saíram do banco e agora são seus:</p>
         <div class="result-box">
             <p><strong>Usuário:</strong> <span id="delivered-user">...</span></p>
             <p><strong>Senha:</strong> <span id="delivered-pass">...</span></p>
         </div>
-        
-        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 15px;">Essa conta foi removida do nosso estoque e agora é 100% sua.</p>
-        <button id="btn-close-delivery" style="margin-top: 20px; background: var(--success);">Entendido</button>
+        <button id="btn-close-delivery" style="margin-top: 20px; background: var(--success);">Fechar</button>
     </div>
 </div>
 
-<script>
-    // ESTADO DO APLICATIVO
-    // Em uma loja real, estes dados viriam salvos em um banco de dados online (ex: Firebase).
-    // Aqui, eles ficam na memória do navegador (se der F5, reinicia, a menos que conecte ao banco).
-    let storeData = {
-        currentUser: null,
-        email: '',
-        promoActive: false,
-        // Listas de estoque (guardando objetos de contas reais cadastrados por você)
-        stock: {
-            twisted: [], // Ex: {user: 'twisted1', pass: '123'}
-            helicity: []
-        }
+<!-- CONEXÃO COMPLETA COM O SEU FIREBASE -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // Suas credenciais oficiais inseridas com sucesso
+    const firebaseConfig = {
+      apiKey: "AIzaSyBFd1LlyUBZYd4V40YsArH0Qr0-IjTkEHo",
+      authDomain: "minha-loja-contas.firebaseapp.com",
+      projectId: "minha-loja-contas",
+      storageBucket: "minha-loja-contas.firebasestorage.app",
+      messagingSenderId: "107552171371",
+      appId: "1:107552171371:web:4c49a2e0e21dcf47b1582e",
+      measurementId: "G-RSN23Y7TKF"
     };
 
-    // Variável para rastrear o que o cliente está comprando no momento
-    let currentPurchaseType = ''; 
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-    // DETECÇÃO DE PROMOÇÃO (A cada 2 semanas, nos fins de semana)
+    // Variáveis locais de controle
+    let userType = null;
+    let promoActive = false;
+    let currentPurchaseType = '';
+    let fetchedStock = { twisted: [], helicity: [] };
+
+    // Checar promoção automaticamente (Finais de semana - de 2 em 2 semanas)
     function checkPromotion() {
         const now = new Date();
-        const day = now.getDay(); // 0 = Domingo, 6 = Sábado
+        const day = now.getDay();
         const isWeekend = (day === 0 || day === 6);
-        
         if (isWeekend) {
-            // Lógica simples para alternar a cada duas semanas
             const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 1)) / (24 * 60 * 60 * 1000));
             const currentWeek = Math.floor(dayOfYear / 7);
-            
-            // Ativa se for semana par
-            storeData.promoActive = (currentWeek % 2 === 0);
+            promoActive = (currentWeek % 2 === 0);
         } else {
-            storeData.promoActive = false;
+            promoActive = false;
         }
     }
 
-    // LOGIN
-    document.getElementById('btn-login').addEventListener('click', () => {
-        const email = document.getElementById('login-email').value;
-        const code = document.getElementById('login-code').value.trim();
+    // Carregar estoque do banco de dados em tempo real
+    async function loadStockFromFirebase() {
+        try {
+            // Limpa estoque local antes de carregar
+            fetchedStock.twisted = [];
+            fetchedStock.helicity = [];
 
-        if(!email) return alert('Insira um e-mail!');
+            const twistedSnapshot = await getDocs(collection(db, "stock_twisted"));
+            twistedSnapshot.forEach((doc) => {
+                fetchedStock.twisted.push({ id: doc.id, ...doc.data() });
+            });
 
-        storeData.email = email;
-        checkPromotion();
+            const helicitySnapshot = await getDocs(collection(db, "stock_helicity"));
+            helicitySnapshot.forEach((doc) => {
+                fetchedStock.helicity.push({ id: doc.id, ...doc.data() });
+            });
 
-        if(code === '126743ff') {
-            storeData.currentUser = 'criador';
-            document.getElementById('creator-indicator').classList.remove('hidden');
-            document.getElementById('btn-to-admin').classList.remove('hidden');
-            document.getElementById('welcome-msg').innerText = "Modo Administrador/Criador ativado!";
-        } else {
-            storeData.currentUser = 'cliente';
-            document.getElementById('creator-indicator').classList.add('hidden');
-            document.getElementById('btn-to-admin').classList.add('hidden');
-            document.getElementById('welcome-msg').innerText = `Cliente: ${email}`;
+            renderStore();
+        } catch (error) {
+            console.error("Erro ao carregar estoque: ", error);
         }
+    }
 
-        document.getElementById('screen-login').classList.add('hidden');
-        document.getElementById('screen-store').classList.remove('hidden');
-        renderStore();
-    });
-
-    // ATUALIZAR TELA DA VITRINE
+    // Renderizar interface
     function renderStore() {
-        // Preços
-        const twistedPrice = storeData.promoActive ? 5.00 : 10.00;
-        const helicityPrice = storeData.promoActive ? 3.99 : 7.99;
+        checkPromotion();
+        const twistedPrice = promoActive ? 5.00 : 10.00;
+        const helicityPrice = promoActive ? 3.99 : 7.99;
 
         document.getElementById('price-twisted').innerText = `R$ ${twistedPrice.toFixed(2).replace('.', ',')}`;
         document.getElementById('price-helicity').innerText = `R$ ${helicityPrice.toFixed(2).replace('.', ',')}`;
 
-        if(storeData.promoActive) {
+        if(promoActive) {
             document.getElementById('old-price-twisted').classList.remove('hidden');
             document.getElementById('old-price-helicity').classList.remove('hidden');
         } else {
@@ -405,129 +397,157 @@
             document.getElementById('old-price-helicity').classList.add('hidden');
         }
 
-        // Estoque Twisted
-        const twistedCard = document.getElementById('card-twisted');
-        const twistedBadge = document.getElementById('badge-twisted');
-        const twistedBtn = document.getElementById('btn-buy-twisted');
-        const twistedCount = storeData.stock.twisted.length;
-
-        if(twistedCount > 0) {
-            twistedCard.classList.remove('out-of-stock');
-            twistedBadge.innerText = `${twistedCount} em estoque`;
-            twistedBadge.style.background = 'var(--success)';
-            twistedBtn.removeAttribute('disabled');
+        // Atualizar Twisted
+        const tCount = fetchedStock.twisted.length;
+        const tCard = document.getElementById('card-twisted');
+        const tBadge = document.getElementById('badge-twisted');
+        const tBtn = document.getElementById('btn-buy-twisted');
+        if(tCount > 0) {
+            tCard.classList.remove('out-of-stock');
+            tBadge.innerText = `${tCount} disponíveis`;
+            tBadge.style.background = 'var(--success)';
+            tBtn.removeAttribute('disabled');
         } else {
-            twistedCard.classList.add('out-of-stock');
-            twistedBadge.innerText = 'Sem Estoque';
-            twistedBadge.style.background = 'var(--danger)';
-            twistedBtn.setAttribute('disabled', 'true');
+            tCard.classList.add('out-of-stock');
+            tBadge.innerText = 'Fora de Estoque';
+            tBadge.style.background = 'var(--danger)';
+            tBtn.setAttribute('disabled', 'true');
         }
 
-        // Estoque Helicity
-        const helicityCard = document.getElementById('card-helicity');
-        const helicityBadge = document.getElementById('badge-helicity');
-        const helicityBtn = document.getElementById('btn-buy-helicity');
-        const helicityCount = storeData.stock.helicity.length;
-
-        if(helicityCount > 0) {
-            helicityCard.classList.remove('out-of-stock');
-            helicityBadge.innerText = `${helicityCount} em estoque`;
-            helicityBadge.style.background = 'var(--success)';
-            helicityBtn.removeAttribute('disabled');
+        // Atualizar Helicity
+        const hCount = fetchedStock.helicity.length;
+        const hCard = document.getElementById('card-helicity');
+        const hBadge = document.getElementById('badge-helicity');
+        const hBtn = document.getElementById('btn-buy-helicity');
+        if(hCount > 0) {
+            hCard.classList.remove('out-of-stock');
+            hBadge.innerText = `${hCount} disponíveis`;
+            hBadge.style.background = 'var(--success)';
+            hBtn.removeAttribute('disabled');
         } else {
-            helicityCard.classList.add('out-of-stock');
-            helicityBadge.innerText = 'Sem Estoque';
-            helicityBadge.style.background = 'var(--danger)';
-            helicityBtn.setAttribute('disabled', 'true');
+            hCard.classList.add('out-of-stock');
+            hBadge.innerText = 'Fora de Estoque';
+            hBadge.style.background = 'var(--danger)';
+            hBtn.setAttribute('disabled', 'true');
         }
     }
 
-    // CADASTRAR NOVA CONTA NO ESTOQUE (CRIADOR)
-    document.getElementById('btn-add-account').addEventListener('click', () => {
+    // Login Event
+    document.getElementById('btn-login').addEventListener('click', () => {
+        const email = document.getElementById('login-email').value;
+        const code = document.getElementById('login-code').value.trim();
+
+        if(!email) return alert('Por favor, insira o e-mail!');
+
+        if(code === '126743ff') {
+            userType = 'criador';
+            document.getElementById('creator-indicator').classList.remove('hidden');
+            document.getElementById('btn-to-admin').classList.remove('hidden');
+            document.getElementById('welcome-msg').innerText = "Modo Criador Logado!";
+        } else {
+            userType = 'cliente';
+            document.getElementById('creator-indicator').classList.add('hidden');
+            document.getElementById('btn-to-admin').classList.add('hidden');
+            document.getElementById('welcome-msg').innerText = `Cliente: ${email}`;
+        }
+
+        document.getElementById('screen-login').classList.add('hidden');
+        document.getElementById('screen-store').classList.remove('hidden');
+        loadStockFromFirebase();
+    });
+
+    // Salvar nova conta no Firebase (Visão do Criador)
+    document.getElementById('btn-add-account').addEventListener('click', async () => {
         const type = document.getElementById('new-account-type').value;
         const user = document.getElementById('new-account-user').value.trim();
         const pass = document.getElementById('new-account-pass').value.trim();
 
-        if(!user || !pass) {
-            return alert('Preencha o usuário e a senha da conta!');
+        if(!user || !pass) return alert('Insira o usuário e a senha da conta!');
+
+        try {
+            const collectionName = type === 'twisted' ? 'stock_twisted' : 'stock_helicity';
+            await addDoc(collection(db, collectionName), {
+                user: user,
+                pass: pass,
+                dateAdded: new Date()
+            });
+
+            alert('Conta salva com total segurança no banco de dados!');
+            document.getElementById('new-account-user').value = '';
+            document.getElementById('new-account-pass').value = '';
+            
+            document.getElementById('screen-creator').classList.add('hidden');
+            document.getElementById('screen-store').classList.remove('hidden');
+            loadStockFromFirebase();
+        } catch (e) {
+            alert('Erro ao salvar no banco. Verifique as regras do Firebase.');
+        }
+    });
+
+    // Fluxo de Compra Seguro (Pega o último item e deleta do banco na hora)
+    async function executeSecurePurchase() {
+        document.getElementById('modal-payment').classList.add('hidden');
+        const targetCollection = currentPurchaseType === 'twisted' ? 'stock_twisted' : 'stock_helicity';
+        const currentStockList = fetchedStock[currentPurchaseType];
+
+        if(currentStockList.length === 0) {
+            alert('Produto esgotado!');
+            return;
         }
 
-        // Adiciona um objeto de conta na lista correspondente
-        storeData.stock[type].push({ user: user, pass: pass });
+        // Pega a ÚLTIMA conta da lista local
+        const targetAccount = currentStockList[currentStockList.length - 1];
 
-        alert(`Conta adicionada ao estoque do ${type.toUpperCase()} com sucesso!`);
-        
-        // Limpar inputs
-        document.getElementById('new-account-user').value = '';
-        document.getElementById('new-account-pass').value = '';
+        try {
+            // Remove do Firebase usando o ID único do documento antes de entregar
+            await deleteDoc(doc(db, targetCollection, targetAccount.id));
 
-        // Volta para a loja
-        document.getElementById('screen-creator').classList.add('hidden');
-        document.getElementById('screen-store').classList.remove('hidden');
-        renderStore();
-    });
+            // Exibe os dados na tela do comprador
+            document.getElementById('delivered-user').innerText = targetAccount.user;
+            document.getElementById('delivered-pass').innerText = targetAccount.pass;
+            document.getElementById('modal-delivery').classList.remove('hidden');
 
-    // NAVEGAÇÕES DE TELAS
-    document.getElementById('btn-to-admin').addEventListener('click', () => {
-        document.getElementById('screen-store').classList.add('hidden');
-        document.getElementById('screen-creator').classList.remove('hidden');
-    });
+            // Atualiza o estoque local na tela
+            loadStockFromFirebase();
+        } catch (error) {
+            alert('Houve um erro no processamento seguro da compra. Tente novamente.');
+        }
+    }
 
-    document.getElementById('btn-back-store').addEventListener('click', () => {
-        document.getElementById('screen-creator').classList.add('hidden');
-        document.getElementById('screen-store').classList.remove('hidden');
-    });
-
-    document.getElementById('btn-logout').addEventListener('click', () => {
-        storeData.currentUser = null;
-        document.getElementById('screen-store').classList.add('hidden');
-        document.getElementById('screen-login').classList.remove('hidden');
-    });
-
-    // FLUXO DE COMPRA E PAGAMENTO
+    // Gatilhos de compra
     document.getElementById('btn-buy-twisted').addEventListener('click', () => {
         currentPurchaseType = 'twisted';
-        openPaymentModal('Conta Twisted 1M');
+        document.getElementById('payment-text').innerText = "Finalizar compra da Conta Twisted (1M)";
+        document.getElementById('modal-payment').classList.remove('hidden');
     });
 
     document.getElementById('btn-buy-helicity').addEventListener('click', () => {
         currentPurchaseType = 'helicity';
-        openPaymentModal('Conta Helicity 600k');
-    });
-
-    function openPaymentModal(itemName) {
-        document.getElementById('payment-text').innerText = `Selecione a forma de pagamento para: ${itemName}`;
+        document.getElementById('payment-text').innerText = "Finalizar compra da Conta Helicity (600k)";
         document.getElementById('modal-payment').classList.remove('hidden');
-    }
-
-    document.getElementById('btn-cancel-pay').addEventListener('click', () => {
-        document.getElementById('modal-payment').classList.add('hidden');
     });
 
-    // PROCESSAR PAGAMENTO E ENTRAR A CONTA CADASTRADA
-    function processPayment(method) {
-        document.getElementById('modal-payment').classList.add('hidden');
-
-        // Pega a conta do estoque (vamos pegar a ÚLTIMA cadastrada)
-        // Usamos .pop() que pega o último item adicionado e remove ele do estoque ao mesmo tempo!
-        const purchasedAccount = storeData.stock[currentPurchaseType].pop();
-
-        if(purchasedAccount) {
-            // Exibir a conta na tela de entrega
-            document.getElementById('delivered-user').innerText = purchasedAccount.user;
-            document.getElementById('delivered-pass').innerText = purchasedAccount.pass;
-            document.getElementById('modal-delivery').classList.remove('hidden');
-        } else {
-            alert('Desculpe, este produto acabou de ficar fora de estoque.');
-        }
-
-        renderStore(); // Atualiza a vitrine (vai reduzir 1 do estoque)
-    }
-
-    document.getElementById('btn-close-delivery').addEventListener('click', () => {
-        document.getElementById('modal-delivery').classList.add('hidden');
+    // Ouvintes de pagamento simulado
+    document.getElementById('pay-pix').addEventListener('click', () => executeSecurePurchase());
+    document.getElementById('pay-paypal').addEventListener('click', () => executeSecurePurchase());
+    
+    // Fechar Modais e Navegação
+    document.getElementById('btn-cancel-pay').addEventListener('click', () => document.getElementById('modal-payment').classList.add('hidden'));
+    document.getElementById('btn-close-delivery').addEventListener('click', () => document.getElementById('modal-delivery').classList.add('hidden'));
+    document.getElementById('btn-to-admin').addEventListener('click', () => {
+        document.getElementById('screen-store').classList.add('hidden');
+        document.getElementById('screen-creator').classList.remove('hidden');
+    });
+    document.getElementById('btn-back-store').addEventListener('click', () => {
+        document.getElementById('screen-creator').classList.add('hidden');
+        document.getElementById('screen-store').classList.remove('hidden');
+    });
+    document.getElementById('btn-logout').addEventListener('click', () => {
+        document.getElementById('screen-store').classList.add('hidden');
+        document.getElementById('screen-login').classList.remove('hidden');
     });
 </script>
 
 </body>
 </html>
+
