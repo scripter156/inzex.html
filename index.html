@@ -316,9 +316,9 @@
 
         /* Suporte */
         .btn-support {
-            background: #25d366;
+            background: #5865F2; /* Cor azul do Discord */
             margin-top: 15px;
-            box-shadow: 0 0 10px rgba(37, 211, 102, 0.4);
+            box-shadow: 0 0 10px rgba(88, 101, 242, 0.4);
         }
 
         /* Seção de Depoimentos */
@@ -524,8 +524,8 @@
         <button id="btn-view-history" style="background: #34495e; box-shadow: none; margin-top: 15px;">💼 Minhas Compras</button>
         <button id="btn-to-admin" class="hidden" style="background: #f1c40f; color: black; box-shadow: none; margin-top: 15px;">Ir ao Painel de Estoque</button>
         
-        <!-- Botão Suporte WhatsApp (Ideal para tirar dúvidas de pais/clientes de 9-14 anos) -->
-        <button class="btn-support" id="btn-whatsapp-support">💬 SUPORTE / FALE COMIGO</button>
+        <!-- Botão Suporte Discord definitivo -->
+        <button class="btn-support" id="btn-discord-support">💬 MEU SERVIDOR NO DISCORD</button>
         
         <button id="btn-logout" style="background: transparent; border: 1px solid rgba(255,255,255,0.1); box-shadow: none; margin-top: 15px;">Sair da Loja</button>
 
@@ -918,10 +918,9 @@
         document.getElementById('modal-payment').classList.remove('hidden');
     });
 
-    // Evento de Suporte WhatsApp (Insira seu número com DDD aqui)
-    document.getElementById('btn-whatsapp-support').addEventListener('click', () => {
-        // Exemplo de link para o seu WhatsApp (Troque o número abaixo pelo seu!)
-        window.open('https://wa.me/5547999999999?text=Olá,%20tenho%20uma%20dúvida%20sobre%20as%20contas%20da%20loja!', '_blank');
+    // Evento de Suporte definitivo para o Discord
+    document.getElementById('btn-discord-support').addEventListener('click', () => {
+        window.open('https://discord.gg/rKbGTsdRTf', '_blank');
     });
 
     // Link do Mercado Pago
