@@ -431,6 +431,8 @@
             max-width: 400px;
             text-align: center;
             border: 1px solid rgba(142, 68, 173, 0.3);
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         .purchase-history {
@@ -593,11 +595,40 @@
     <div id="screen-creator" class="hidden">
         <h2>Painel do Dono</h2>
         
+        <!-- NOVO RECURSO 3: PAINEL DE FATURAMENTO -->
+        <div class="promo-switch-container" style="border-color: var(--success);">
+            <h4 style="color: var(--success); margin-bottom: 10px;">📊 Faturamento Global</h4>
+            <p style="font-size: 1.1rem; margin-bottom: 5px;">Total Recebido: <strong id="total-revenue" style="color: var(--success);">R$ 0,00</strong></p>
+            <p style="font-size: 0.8rem; color: var(--text);">Contas Entregues: <span id="total-sales-count" style="font-weight: bold; color: white;">0</span></p>
+        </div>
+
         <!-- BOTAO DE CONTROLE DA PROMOÇÃO (EXCLUSIVO CRIADOR) -->
         <div class="promo-switch-container">
             <h4 style="color:#f1c40f; margin-bottom: 10px;">⚡ Sistema de Descontos</h4>
             <button id="btn-toggle-promo" style="background: var(--danger); box-shadow: none;">Ativar Promoção (50% OFF)</button>
             <p id="promo-status-text" style="font-size: 0.75rem; margin-top: 8px; color: var(--text);">Estado atual: Inativa</p>
+        </div>
+
+        <!-- NOVO RECURSO 4: CONFIGURAÇÃO DE LINKS DE PAGAMENTO -->
+        <div class="promo-switch-container" style="border-color: var(--secondary); text-align: left;">
+            <h4 style="color: var(--secondary); text-align: center; margin-bottom: 12px;">🔗 Links de Pagamento Mercado Pago</h4>
+            <div class="form-group">
+                <label style="color: #fff; font-size: 0.75rem;">Twisted Normal (R$ 10,00)</label>
+                <input type="text" id="link-twisted-normal" placeholder="Cole o Link do Mercado Pago">
+            </div>
+            <div class="form-group">
+                <label style="color: #fff; font-size: 0.75rem;">Twisted Promo (R$ 5,00)</label>
+                <input type="text" id="link-twisted-promo" placeholder="Cole o Link do Mercado Pago">
+            </div>
+            <div class="form-group">
+                <label style="color: #fff; font-size: 0.75rem;">Helicity Normal (R$ 7,99)</label>
+                <input type="text" id="link-helicity-normal" placeholder="Cole o Link do Mercado Pago">
+            </div>
+            <div class="form-group">
+                <label style="color: #fff; font-size: 0.75rem;">Helicity Promo (R$ 4,99)</label>
+                <input type="text" id="link-helicity-promo" placeholder="Cole o Link do Mercado Pago">
+            </div>
+            <button id="btn-save-links" style="background: var(--secondary); font-size: 0.8rem; padding: 8px; box-shadow: none;">Salvar Todos os Links</button>
         </div>
 
         <div class="creator-badge">Adicionar Novas Contas no Banco</div>
@@ -695,6 +726,14 @@
     // Variável para gerenciar a promoção ativa ou não globalmente
     let isPromoActive = false;
 
+    // Configuração de links carregados do Firestore
+    let paymentLinks = {
+        twisted_normal: '',
+        twisted_promo: '',
+        helicity_normal: '',
+        helicity_promo: ''
+    };
+
     // Lógica do FAQ
     const faqItems = document.querySelectorAll('.faq-item');
     faqItems.forEach(item => {
@@ -733,6 +772,35 @@
                 isPromoActive = false;
             }
             applyPricesUI();
+        });
+    }
+
+    // Escutar links de pagamento em tempo real
+    function listenToPaymentLinks() {
+        onSnapshot(doc(db, "config_links", "payment"), (docSnap) => {
+            if (docSnap.exists()) {
+                paymentLinks = docSnap.data();
+                // Preenche inputs no painel admin para você editar se desejar
+                document.getElementById('link-twisted-normal').value = paymentLinks.twisted_normal || '';
+                document.getElementById('link-twisted-promo').value = paymentLinks.twisted_promo || '';
+                document.getElementById('link-helicity-normal').value = paymentLinks.helicity_normal || '';
+                document.getElementById('link-helicity-promo').value = paymentLinks.helicity_promo || '';
+            }
+        });
+    }
+
+    // Escutar histórico de faturamento global em tempo real
+    function listenToRevenue() {
+        onSnapshot(collection(db, "sales"), (snapshot) => {
+            let totalRevenue = 0;
+            let salesCount = 0;
+            snapshot.forEach(doc => {
+                const sale = doc.data();
+                totalRevenue += parseFloat(sale.price || 0);
+                salesCount++;
+            });
+            document.getElementById('total-revenue').innerText = `R$ ${totalRevenue.toFixed(2).replace('.', ',')}`;
+            document.getElementById('total-sales-count').innerText = salesCount;
         });
     }
 
@@ -807,6 +875,8 @@
     window.addEventListener('DOMContentLoaded', () => {
         loadStockFromFirebase();
         listenToPromoState();
+        listenToPaymentLinks();
+        listenToRevenue();
     });
 
     // Renderizar Vitrine
@@ -954,7 +1024,23 @@
         }
     });
 
-    // Fluxo de Entrega Automática
+    // Salvar novos links de pagamento
+    document.getElementById('btn-save-links').addEventListener('click', async () => {
+        try {
+            await setDoc(doc(db, "config_links", "payment"), {
+                twisted_normal: document.getElementById('link-twisted-normal').value.trim(),
+                twisted_promo: document.getElementById('link-twisted-promo').value.trim(),
+                helicity_normal: document.getElementById('link-helicity-normal').value.trim(),
+                helicity_promo: document.getElementById('link-helicity-promo').value.trim()
+            });
+            alert('Links de pagamento salvos com sucesso!');
+        } catch (e) {
+            console.error(e);
+            alert('Erro ao salvar os links no banco de dados.');
+        }
+    });
+
+    // Fluxo de Entrega Automática com Registro de Faturamento
     async function executeSecurePurchase() {
         document.getElementById('modal-payment').classList.add('hidden');
         const targetCollection = currentPurchaseType === 'twisted' ? 'stock_twisted' : 'stock_helicity';
@@ -967,8 +1053,25 @@
 
         const targetAccount = currentStockList[0];
 
+        // Definindo o valor da venda para registrar no faturamento
+        let finalPrice = 0;
+        if (currentPurchaseType === 'twisted') {
+            finalPrice = isPromoActive ? 5.00 : 10.00;
+        } else {
+            finalPrice = isPromoActive ? 4.99 : 7.99;
+        }
+
         try {
+            // Remove a conta vendida do estoque
             await deleteDoc(doc(db, targetCollection, targetAccount.id));
+
+            // Salva a venda realizada na coleção 'sales' para atualizar o faturamento
+            await addDoc(collection(db, "sales"), {
+                product: currentPurchaseType,
+                price: finalPrice,
+                buyer: document.getElementById('login-email').value || 'anonimo@email.com',
+                date: new Date()
+            });
 
             localHistory.push({
                 tipo: currentPurchaseType,
@@ -984,7 +1087,8 @@
             await loadStockFromFirebase();
             updateHistoryUI();
         } catch (error) {
-            alert('Erro no processamento.');
+            console.error(error);
+            alert('Erro no processamento da compra.');
         }
     }
 
@@ -1028,9 +1132,20 @@
         window.open('https://discord.gg/rKbGTsdRTf', '_blank');
     });
 
-    // Link do Mercado Pago
+    // Redirecionamento Dinâmico Inteligente de Link do Mercado Pago
     document.getElementById('btn-goto-mercadopago').addEventListener('click', () => {
-        window.open('https://link.mercadopago.com.br/seulinkdepagamento', '_blank');
+        let activeLink = '';
+        if (currentPurchaseType === 'twisted') {
+            activeLink = isPromoActive ? paymentLinks.twisted_promo : paymentLinks.twisted_normal;
+        } else {
+            activeLink = isPromoActive ? paymentLinks.helicity_promo : paymentLinks.helicity_normal;
+        }
+
+        if (activeLink && activeLink.trim() !== '') {
+            window.open(activeLink, '_blank');
+        } else {
+            alert('⚠️ Atenção: O dono da loja ainda não configurou o link de pagamento do Mercado Pago para esta oferta.');
+        }
     });
 
     document.getElementById('btn-confirm-delivery').addEventListener('click', () => {
@@ -1068,4 +1183,3 @@
 
 </body>
 </html>
-
