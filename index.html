@@ -203,6 +203,75 @@
             transform: none !important;
         }
 
+        /* Seletor Customizado de Idioma (Dropdown) */
+        .lang-selector-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .lang-selected-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 10px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .lang-selected-box:hover {
+            border-color: var(--primary);
+            box-shadow: var(--glow-purple);
+        }
+
+        .lang-option-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .lang-arrow {
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+        }
+
+        .lang-dropdown-list {
+            position: absolute;
+            top: 110%;
+            left: 0;
+            width: 100%;
+            background: #151d26;
+            border: 1px solid rgba(142, 68, 173, 0.4);
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.9);
+            z-index: 10;
+            display: none;
+            overflow: hidden;
+        }
+
+        .lang-dropdown-list.show {
+            display: block;
+        }
+
+        .lang-dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 15px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .lang-dropdown-item:hover {
+            background: var(--primary);
+            color: white;
+        }
+
         /* Cartões de Contas estilo Neon */
         .item-card {
             background: rgba(0, 0, 0, 0.3);
@@ -477,31 +546,56 @@
     <div class="status-bar">
         <div class="status-indicator">
             <span class="status-dot"></span>
-            <span>BOT DE ENTREGA: <strong>ONLINE</strong></span>
+            <span>BOT DE ENTREGA: <strong id="txt-bot-status">ONLINE</strong></span>
         </div>
         <div>
-            <span>⚡ Envio Instantâneo</span>
+            <span id="txt-delivery-type">⚡ Envio Instantâneo</span>
         </div>
     </div>
 
     <div class="music-player">
-        <span>🎵 Música Gamer</span>
+        <span id="txt-music-label">🎵 Música Gamer</span>
         <button class="music-btn" id="btn-music-toggle">Play ▶</button>
     </div>
 
     <!-- TELA 1: LOGIN -->
     <div id="screen-login">
-        <h2>Entrar na Loja</h2>
+        <!-- SELETOR DINÂMICO DE PAÍS / IDIOMA -->
+        <div class="lang-selector-container">
+            <div class="lang-selected-box" id="lang-trigger">
+                <div class="lang-option-content" id="lang-current">
+                    <span>🇧🇷</span>
+                    <span>Escolher País / Choose Country</span>
+                </div>
+                <span class="lang-arrow" id="lang-arrow">▼</span>
+            </div>
+            <div class="lang-dropdown-list" id="lang-dropdown">
+                <div class="lang-dropdown-item" data-lang="pt">
+                    <span>🇧🇷</span>
+                    <span>Brasil (Português)</span>
+                </div>
+                <div class="lang-dropdown-item" data-lang="en">
+                    <span>🇺🇸</span>
+                    <span>United States (English)</span>
+                </div>
+                <div class="lang-dropdown-item" data-lang="es">
+                    <span>🇪🇸</span>
+                    <span>España (Español)</span>
+                </div>
+            </div>
+        </div>
+
+        <h2 id="login-title">Entrar na Loja</h2>
         <div class="form-group">
-            <label>E-mail do Cliente</label>
+            <label id="login-label-email">E-mail do Cliente</label>
             <input type="email" id="login-email" placeholder="seuemail@exemplo.com" required>
         </div>
         <div class="form-group">
-            <label>Senha</label>
+            <label id="login-label-pass">Senha</label>
             <input type="password" id="login-password" placeholder="Crie uma senha" required>
         </div>
         <div class="form-group">
-            <label>Código Especial (Se tiver)</label>
+            <label id="login-label-code">Código Especial (Se tiver)</label>
             <input type="text" id="login-code" placeholder="Código de Criador">
         </div>
         <button id="btn-login">Entrar na Vitrine</button>
@@ -511,14 +605,14 @@
     <div id="screen-store" class="hidden">
         <div id="creator-indicator" class="creator-badge hidden">Modo Criador Ativo</div>
         
-        <h2>Vitrine de Contas</h2>
+        <h2 id="store-title">Vitrine de Contas</h2>
         <p id="welcome-msg" style="color: var(--text); font-size: 0.85rem; margin-bottom: 20px; text-align: center;"></p>
 
         <!-- Twisted -->
         <div class="item-card out-of-stock" id="card-twisted">
             <div class="item-badge" id="badge-twisted">Carregando...</div>
-            <h3 style="text-align: left; margin-bottom: 5px; font-size: 1.1rem; color: #fff;">Conta Twisted (1 Milhão)</h3>
-            <p style="font-size: 0.8rem; color: var(--text); margin-bottom: 12px;">Com dinheiro e itens raros no jogo Twisted!</p>
+            <h3 style="text-align: left; margin-bottom: 5px; font-size: 1.1rem; color: #fff;" id="title-twisted-card">Conta Twisted (1 Milhão)</h3>
+            <p style="font-size: 0.8rem; color: var(--text); margin-bottom: 12px;" id="desc-twisted-card">Com dinheiro e itens raros no jogo Twisted!</p>
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
                     <span class="old-price hidden" id="old-price-twisted">R$ 10,00</span>
@@ -531,8 +625,8 @@
         <!-- Helicity -->
         <div class="item-card out-of-stock" id="card-helicity">
             <div class="item-badge" id="badge-helicity">Carregando...</div>
-            <h3 style="text-align: left; margin-bottom: 5px; font-size: 1.1rem; color: #fff;">Conta Helicity (600 Mil)</h3>
-            <p style="font-size: 0.8rem; color: var(--text); margin-bottom: 12px;">Com coins prontos para gastar em itens raros!</p>
+            <h3 style="text-align: left; margin-bottom: 5px; font-size: 1.1rem; color: #fff;" id="title-helicity-card">Conta Helicity (600 Mil)</h3>
+            <p style="font-size: 0.8rem; color: var(--text); margin-bottom: 12px;" id="desc-helicity-card">Com coins prontos para gastar em itens raros!</p>
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
                     <span class="old-price hidden" id="old-price-helicity">R$ 7,99</span>
@@ -552,41 +646,41 @@
 
         <!-- SEÇÃO COMO FUNCIONA -->
         <div class="tutorial-section">
-            <h3>Como funciona? 📖</h3>
+            <h3 id="tutorial-title">Como funciona? 📖</h3>
             <div class="step-item">
                 <span class="step-number">1</span>
-                <p>Escolha a conta desejada e clique em <strong>Comprar</strong>.</p>
+                <p id="tutorial-step1">Escolha a conta desejada e clique em <strong>Comprar</strong>.</p>
             </div>
             <div class="step-item">
                 <span class="step-number">2</span>
-                <p>Faça o pagamento via Pix de forma 100% segura.</p>
+                <p id="tutorial-step2">Faça o pagamento via Pix de forma 100% segura.</p>
             </div>
             <div class="step-item">
                 <span class="step-number">3</span>
-                <p>Após pagar, clique em <strong>Confirmar</strong> e o Usuário/Senha aparece na sua tela na hora!</p>
+                <p id="tutorial-step3">Após pagar, clique em <strong>Confirmar</strong> e o Usuário/Senha aparece na sua tela na hora!</p>
             </div>
         </div>
 
         <div class="reviews-section">
-            <h3>Avaliações de Clientes ⭐</h3>
+            <h3 id="reviews-title">Avaliações de Clientes ⭐</h3>
             <div class="review-card">
                 <div class="review-header">
                     <strong>@RobloxPro_99</strong>
                     <span class="stars">⭐⭐⭐⭐⭐</span>
                 </div>
-                <p class="review-text">"Muito top! Comprei a Twisted de R$ 10,00 e o bot me deu a senha na hora."</p>
+                <p class="review-text" id="review-comment-1">"Muito top! Comprei a Twisted de R$ 10,00 e o bot me deu a senha na hora."</p>
             </div>
         </div>
 
         <div class="faq-section">
-            <h3>Perguntas Frequentes ❓</h3>
+            <h3 id="faq-title">Perguntas Frequentes ❓</h3>
             <div class="faq-item">
-                <div class="faq-question">É seguro mesmo? <span></span></div>
-                <div class="faq-answer">Sim! Nós somos uma loja verificada e as contas são entregues automaticamente pelo nosso bot na hora que você paga!</div>
+                <div class="faq-question" id="faq-q1">É seguro mesmo? <span></span></div>
+                <div class="faq-answer" id="faq-a1">Sim! Nós somos uma loja verificada e as contas são entregues automaticamente pelo nosso bot na hora que você paga!</div>
             </div>
             <div class="faq-item">
-                <div class="faq-question">Posso colocar meu próprio e-mail na conta Roblox? <span></span></div>
-                <div class="faq-answer">Sim! Assim que receber o usuário e a senha, recomendamos que entre no Roblox, mude a senha e coloque seu próprio e-mail para ela ser 100% sua.</div>
+                <div class="faq-question" id="faq-q2">Posso colocar meu próprio e-mail na conta Roblox? <span></span></div>
+                <div class="faq-answer" id="faq-a2">Sim! Assim que receber o usuário e a senha, recomendamos que entre no Roblox, mude a senha e coloque seu próprio e-mail para ela ser 100% sua.</div>
             </div>
         </div>
     </div>
@@ -663,7 +757,7 @@
 
     <!-- TELA 4: HISTÓRICO DE CONTAS COMPRADAS -->
     <div id="screen-history" class="hidden">
-        <h2>Minhas Contas Compradas</h2>
+        <h2 id="history-title">Minhas Contas Compradas</h2>
         <div id="history-list" class="purchase-history">
             <p style="color: var(--text); text-align: center;">Nenhuma conta comprada nesta sessão ainda.</p>
         </div>
@@ -674,13 +768,13 @@
 <!-- MODAL DE CHECKOUT REAL (MERCADO PAGO) -->
 <div id="modal-payment" class="modal hidden">
     <div class="modal-content">
-        <h3>Pagar com Pix</h3>
+        <h3 id="pay-modal-title">Pagar com Pix</h3>
         <p id="payment-text" style="font-size: 0.9rem; margin-bottom: 20px; color: var(--text);"></p>
         
         <button class="payment-option" id="btn-goto-mercadopago" style="background: #009ee3; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: none;">
             🛒 Pagar via Mercado Pago Seguro
         </button>
-        <p style="font-size: 0.75rem; color: var(--text); margin-top: 12px;">Após concluir o Pix, volte aqui e clique em <strong>Confirmar Entrega</strong> abaixo.</p>
+        <p style="font-size: 0.75rem; color: var(--text); margin-top: 12px;" id="pay-modal-desc">Após concluir o Pix, volte aqui e clique em <strong>Confirmar Entrega</strong> abaixo.</p>
         
         <button id="btn-confirm-delivery" style="background: var(--success); margin-top: 15px; box-shadow: none;">✔️ Confirmar Entrega</button>
         <button id="btn-cancel-pay" style="background: transparent; color: var(--danger); box-shadow: none; margin-top: 10px;">Cancelar</button>
@@ -690,13 +784,13 @@
 <!-- MODAL DE ENTREGA -->
 <div id="modal-delivery" class="modal hidden">
     <div class="modal-content">
-        <h3 style="color: var(--success);">🎉 SUA CONTA CHEGOU!</h3>
-        <p style="font-size: 0.85rem; margin-bottom: 15px;">Guarde esses dados ou tire um print agora!</p>
+        <h3 style="color: var(--success);" id="delivery-modal-title">🎉 SUA CONTA CHEGOU!</h3>
+        <p style="font-size: 0.85rem; margin-bottom: 15px;" id="delivery-modal-desc">Guarde esses dados ou tire um print agora!</p>
         <div style="background: rgba(46, 204, 113, 0.1); border: 2px dashed var(--success); padding: 15px; border-radius: 10px; text-align: left;">
-            <p><strong>Usuário Roblox:</strong> <span id="delivered-user" style="color: #fff; font-weight: bold;">...</span></p>
-            <p><strong>Senha:</strong> <span id="delivered-pass" style="color: #fff; font-weight: bold;">...</span></p>
+            <p><strong id="delivery-label-user">Usuário Roblox:</strong> <span id="delivered-user" style="color: #fff; font-weight: bold;">...</span></p>
+            <p><strong id="delivery-label-pass">Senha:</strong> <span id="delivered-pass" style="color: #fff; font-weight: bold;">...</span></p>
         </div>
-        <p style="font-size: 0.75rem; color: var(--text); margin-top: 10px;">Estes dados também foram salvos na aba "Minhas Compras".</p>
+        <p style="font-size: 0.75rem; color: var(--text); margin-top: 10px;" id="delivery-modal-history-info">Estes dados também foram salvos na aba "Minhas Compras".</p>
         <button id="btn-close-delivery" style="margin-top: 20px; background: var(--success); box-shadow: none;">Fechar e Jogar!</button>
     </div>
 </div>
@@ -722,17 +816,275 @@
     let currentPurchaseType = '';
     let fetchedStock = { twisted: [], helicity: [] };
     let localHistory = [];
-    
-    // Variável para gerenciar a promoção ativa ou não globalmente
     let isPromoActive = false;
 
-    // Configuração de links carregados do Firestore
     let paymentLinks = {
         twisted_normal: '',
         twisted_promo: '',
         helicity_normal: '',
         helicity_promo: ''
     };
+
+    // Dicionário de Idiomas
+    const translations = {
+        pt: {
+            flag: "🇧🇷",
+            name: "Brasil (Português)",
+            urgency_normal: "🔥 PROMOÇÃO DE INAUGURAÇÃO! POUCO ESTOQUE RESTANTE!",
+            urgency_promo: "⚡ PROMOÇÃO DE 50% OFF ATIVADA! COMPRE AGORA!",
+            bot_status: "ONLINE",
+            delivery_instant: "⚡ Envio Instantâneo",
+            music_label: "🎵 Música Gamer",
+            login_title: "Entrar na Loja",
+            login_email: "E-mail do Cliente",
+            login_pass: "Senha",
+            login_code: "Código Especial (Se tiver)",
+            login_btn: "Entrar na Vitrine",
+            store_title: "Vitrine de Contas",
+            card_twisted_title: "Conta Twisted (1 Milhão)",
+            card_twisted_desc: "Com dinheiro e itens raros no jogo Twisted!",
+            card_helicity_title: "Conta Helicity (600 Mil)",
+            card_helicity_desc: "Com coins prontos para gastar em itens raros!",
+            buy_btn: "Comprar",
+            btn_my_purchases: "💼 Minhas Compras",
+            btn_support: "💬 MEU SERVIDOR NO DISCORD",
+            btn_exit: "Sair da Loja",
+            tutorial_title: "Como funciona? 📖",
+            tutorial_s1: "Escolha a conta desejada e clique em <strong>Comprar</strong>.",
+            tutorial_s2: "Faça o pagamento via Pix de forma 100% segura.",
+            tutorial_s3: "Após pagar, clique em <strong>Confirmar</strong> e o Usuário/Senha aparece na sua tela na hora!",
+            reviews_title: "Avaliações de Clientes ⭐",
+            review_txt1: '"Muito top! Comprei a Twisted de R$ 10,00 e o bot me deu a senha na hora."',
+            faq_title: "Perguntas Frequentes ❓",
+            faq_q1: "É seguro mesmo?",
+            faq_a1: "Sim! Nós somos uma loja verificada e as contas são entregues automaticamente pelo nosso bot na hora que você paga!",
+            faq_q2: "Posso colocar meu próprio e-mail na conta Roblox?",
+            faq_a2: "Sim! Assim que receber o usuário e a senha, recomendamos que entre no Roblox, mude a senha e coloque seu próprio e-mail para ela ser 100% sua.",
+            pay_modal_title: "Pagar com Pix",
+            pay_modal_btn: "🛒 Pagar via Mercado Pago Seguro",
+            pay_modal_desc: "Após concluir o Pix, volte aqui e clique em <strong>Confirmar Entrega</strong> abaixo.",
+            pay_modal_confirm: "✔️ Confirmar Entrega",
+            pay_modal_cancel: "Cancelar",
+            delivery_title: "🎉 SUA CONTA CHEGOU!",
+            delivery_desc: "Guarde esses dados ou tire um print agora!",
+            delivery_user: "Usuário Roblox:",
+            delivery_pass: "Senha:",
+            delivery_history_info: "Estes dados também foram salvos na aba \"Minhas Compras\".",
+            delivery_close_btn: "Fechar e Jogar!",
+            history_title: "Minhas Contas Compradas",
+            history_back_btn: "Voltar à Loja"
+        },
+        en: {
+            flag: "🇺🇸",
+            name: "United States (English)",
+            urgency_normal: "🔥 GRAND OPENING SALE! LIMITED STOCK REMAINING!",
+            urgency_promo: "⚡ 50% OFF PROMOTION ACTIVATED! BUY NOW!",
+            bot_status: "ONLINE",
+            delivery_instant: "⚡ Instant Delivery",
+            music_label: "🎵 Gamer Music",
+            login_title: "Enter the Store",
+            login_email: "Customer Email",
+            login_pass: "Password",
+            login_code: "Special Code (Optional)",
+            login_btn: "Enter Showcase",
+            store_title: "Account Showcase",
+            card_twisted_title: "Twisted Account (1 Million)",
+            card_twisted_desc: "Comes with money and rare items in the Twisted game!",
+            card_helicity_title: "Helicity Account (600k)",
+            card_helicity_desc: "Comes with coins ready to spend on rare items!",
+            buy_btn: "Buy Now",
+            btn_my_purchases: "💼 My Purchases",
+            btn_support: "💬 MY DISCORD SERVER",
+            btn_exit: "Exit Store",
+            tutorial_title: "How it works? 📖",
+            tutorial_s1: "Choose your desired account and click <strong>Buy Now</strong>.",
+            tutorial_s2: "Make the payment securely using our provided systems.",
+            tutorial_s3: "After paying, click <strong>Confirm</strong> and your User/Password is shown instantly!",
+            reviews_title: "Customer Reviews ⭐",
+            review_txt1: '"Awesome! I bought the $10 Twisted account and the bot gave me the credentials instantly."',
+            faq_title: "Frequently Asked Questions ❓",
+            faq_q1: "Is this safe?",
+            faq_a1: "Yes! We are a verified store and accounts are auto-delivered by our system instantly after payment!",
+            faq_q2: "Can I link my own email to the Roblox account?",
+            faq_a2: "Yes! Once you get the username and password, we highly recommend changing the password and adding your own email so it belongs 100% to you.",
+            pay_modal_title: "Pay Securely",
+            pay_modal_btn: "🛒 Pay via Secure Mercado Pago",
+            pay_modal_desc: "Once payment is completed, come back here and click <strong>Confirm Delivery</strong> below.",
+            pay_modal_confirm: "✔️ Confirm Delivery",
+            pay_modal_cancel: "Cancel",
+            delivery_title: "🎉 YOUR ACCOUNT HAS ARRIVED!",
+            delivery_desc: "Save this credentials or take a screenshot now!",
+            delivery_user: "Roblox Username:",
+            delivery_pass: "Password:",
+            delivery_history_info: "This data has also been saved in the \"My Purchases\" tab.",
+            delivery_close_btn: "Close and Play!",
+            history_title: "My Purchased Accounts",
+            history_back_btn: "Back to Store"
+        },
+        es: {
+            flag: "🇪🇸",
+            name: "España (Español)",
+            urgency_normal: "🔥 ¡OFERTA DE APERTURA! ¡ÚLTIMAS UNIDADES!",
+            urgency_promo: "⚡ ¡PROMOCIÓN 50% DE DESCUENTO! ¡COMPRA YA!",
+            bot_status: "ONLINE",
+            delivery_instant: "⚡ Envío Instantáneo",
+            music_label: "🎵 Música Gamer",
+            login_title: "Entrar en la Tienda",
+            login_email: "E-mail del Cliente",
+            login_pass: "Contraseña",
+            login_code: "Código Especial (Opcional)",
+            login_btn: "Entrar al Catálogo",
+            store_title: "Catálogo de Cuentas",
+            card_twisted_title: "Cuenta Twisted (1 Millón)",
+            card_twisted_desc: "¡Viene con dinero y artículos raros en el juego Twisted!",
+            card_helicity_title: "Cuenta Helicity (600 Mil)",
+            card_helicity_desc: "¡Viene con monedas listas para gastar en artículos raros!",
+            buy_btn: "Comprar",
+            btn_my_purchases: "💼 Mis Compras",
+            btn_support: "💬 MI SERVIDOR DE DISCORD",
+            btn_exit: "Salir de la Tienda",
+            tutorial_title: "¿Cómo funciona? 📖",
+            tutorial_s1: "Elige la cuenta que deseas y haz clic en <strong>Comprar</strong>.",
+            tutorial_s2: "Realiza el pago de forma totalmente segura.",
+            tutorial_s3: "Después de pagar, haz clic en <strong>Confirmar</strong> y el Usuario/Contraseña aparecerá al instante.",
+            reviews_title: "Opiniones de Clientes ⭐",
+            review_txt1: '"¡Buenísimo! Compré la cuenta de Twisted de R$ 10,00 y el bot me dio la contraseña al instante."',
+            faq_title: "Preguntas Frecuentes ❓",
+            faq_q1: "¿Es seguro?",
+            faq_a1: "¡Sí! Somos una tienda verificada y el bot entrega las cuentas de manera automática al instante de realizar el pago.",
+            faq_q2: "¿Puedo poner mi propio e-mail en la cuenta de Roblox?",
+            faq_a2: "¡Sí! Tan pronto recibas los datos, te sugerimos cambiar la contraseña y vincular tu correo electrónico para que sea 100% tuya.",
+            pay_modal_title: "Pagar de forma Segura",
+            pay_modal_btn: "🛒 Pagar vía Mercado Pago Seguro",
+            pay_modal_desc: "Tras completar el pago, vuelve aquí y haz clic en <strong>Confirmar Entrega</strong> abajo.",
+            pay_modal_confirm: "✔️ Confirmar Entrega",
+            pay_modal_cancel: "Cancelar",
+            delivery_title: "🎉 ¡TU CUENTA HA LLEGADO!",
+            delivery_desc: "¡Guarda estos datos o haz una captura de pantalla ahora!",
+            delivery_user: "Usuario Roblox:",
+            delivery_pass: "Contraseña:",
+            delivery_history_info: "Estos datos también se han guardado en la pestaña \"Mis Compras\".",
+            delivery_close_btn: "¡Cerrar y Jugar!",
+            history_title: "Mis Cuentas Compradas",
+            history_back_btn: "Volver a la Tienda"
+        }
+    };
+
+    let currentSelectedLang = 'pt'; // Padrão português
+
+    // Interações do Menu de Países (Dropdown)
+    const langTrigger = document.getElementById('lang-trigger');
+    const langDropdown = document.getElementById('lang-dropdown');
+    const langArrow = document.getElementById('lang-arrow');
+    const langCurrent = document.getElementById('lang-current');
+
+    // Abre e fecha o seletor apenas quando clica no botão "Escolher País"
+    langTrigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = langDropdown.classList.contains('show');
+        if(isOpen) {
+            langDropdown.classList.remove('show');
+            langArrow.style.transform = 'rotate(0deg)';
+        } else {
+            langDropdown.classList.add('show');
+            langArrow.style.transform = 'rotate(180deg)';
+        }
+    });
+
+    // Fecha o dropdown caso o usuário clique fora dele
+    document.addEventListener('click', () => {
+        langDropdown.classList.remove('show');
+        langArrow.style.transform = 'rotate(0deg)';
+    });
+
+    // Altera o idioma global do app ao selecionar uma opção
+    document.querySelectorAll('.lang-dropdown-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+            const lang = e.currentTarget.getAttribute('data-lang');
+            currentSelectedLang = lang;
+            
+            // Atualiza o botão visual
+            langCurrent.innerHTML = `
+                <span>${translations[lang].flag}</span>
+                <span>${translations[lang].name}</span>
+            `;
+
+            // Aplica as traduções em todo o aplicativo
+            applyTranslations(lang);
+        });
+    });
+
+    function applyTranslations(lang) {
+        const trans = translations[lang];
+
+        // Atualização da Tela de Login
+        document.getElementById('login-title').innerText = trans.login_title;
+        document.getElementById('login-label-email').innerText = trans.login_email;
+        document.getElementById('login-label-pass').innerText = trans.login_pass;
+        document.getElementById('login-label-code').innerText = trans.login_code;
+        document.getElementById('btn-login').innerText = trans.login_btn;
+
+        // Atualização da Status Bar e Barra de Áudio
+        document.getElementById('txt-bot-status').innerText = trans.bot_status;
+        document.getElementById('txt-delivery-type').innerText = trans.delivery_instant;
+        document.getElementById('txt-music-label').innerText = trans.music_label;
+
+        // Atualização da Vitrine
+        document.getElementById('store-title').innerText = trans.store_title;
+        document.getElementById('title-twisted-card').innerText = trans.card_twisted_title;
+        document.getElementById('desc-twisted-card').innerText = trans.card_twisted_desc;
+        document.getElementById('title-helicity-card').innerText = trans.card_helicity_title;
+        document.getElementById('desc-helicity-card').innerText = trans.card_helicity_desc;
+        document.getElementById('btn-buy-twisted').innerText = trans.buy_btn;
+        document.getElementById('btn-buy-helicity').innerText = trans.buy_btn;
+        document.getElementById('btn-view-history').innerText = trans.btn_my_purchases;
+        document.getElementById('btn-discord-support').innerText = trans.btn_support;
+        document.getElementById('btn-logout').innerText = trans.btn_exit;
+
+        // Banner de Promoção de acordo com o status
+        const banner = document.getElementById('announcement-banner');
+        if (isPromoActive) {
+            banner.innerText = trans.urgency_promo;
+        } else {
+            banner.innerText = trans.urgency_normal;
+        }
+
+        // Seção Como Funciona / Tutorial
+        document.getElementById('tutorial-title').innerText = trans.tutorial_title;
+        document.getElementById('tutorial-step1').innerHTML = trans.tutorial_s1;
+        document.getElementById('tutorial-step2').innerHTML = trans.tutorial_s2;
+        document.getElementById('tutorial-step3').innerHTML = trans.tutorial_s3;
+
+        // Seção Avaliações
+        document.getElementById('reviews-title').innerText = trans.reviews_title;
+        document.getElementById('review-comment-1').innerText = trans.review_txt1;
+
+        // Seção FAQ
+        document.getElementById('faq-title').innerText = trans.faq_title;
+        document.getElementById('faq-q1').innerHTML = trans.faq_q1 + " <span></span>";
+        document.getElementById('faq-a1').innerText = trans.faq_a1;
+        document.getElementById('faq-q2').innerHTML = trans.faq_q2 + " <span></span>";
+        document.getElementById('faq-a2').innerText = trans.faq_a2;
+
+        // Modal de Pagamento
+        document.getElementById('pay-modal-title').innerText = trans.pay_modal_title;
+        document.getElementById('btn-goto-mercadopago').innerHTML = `🛒 ${trans.pay_modal_btn}`;
+        document.getElementById('pay-modal-desc').innerHTML = trans.pay_modal_desc;
+        document.getElementById('btn-confirm-delivery').innerText = trans.pay_modal_confirm;
+        document.getElementById('btn-cancel-pay').innerText = trans.pay_modal_cancel;
+
+        // Modal de Entrega
+        document.getElementById('delivery-modal-title').innerText = trans.delivery_title;
+        document.getElementById('delivery-modal-desc').innerText = trans.delivery_desc;
+        document.getElementById('delivery-label-user').innerText = trans.delivery_user;
+        document.getElementById('delivery-label-pass').innerText = trans.delivery_pass;
+        document.getElementById('delivery-modal-history-info').innerText = trans.delivery_history_info;
+        document.getElementById('btn-close-delivery').innerText = trans.delivery_close_btn;
+
+        // Histórico de Compras
+        document.getElementById('history-title').innerText = trans.history_title;
+        document.getElementById('btn-back-from-history').innerText = trans.history_back_btn;
+    }
 
     // Lógica do FAQ
     const faqItems = document.querySelectorAll('.faq-item');
@@ -772,6 +1124,7 @@
                 isPromoActive = false;
             }
             applyPricesUI();
+            applyTranslations(currentSelectedLang);
         });
     }
 
@@ -780,7 +1133,6 @@
         onSnapshot(doc(db, "config_links", "payment"), (docSnap) => {
             if (docSnap.exists()) {
                 paymentLinks = docSnap.data();
-                // Preenche inputs no painel admin para você editar se desejar
                 document.getElementById('link-twisted-normal').value = paymentLinks.twisted_normal || '';
                 document.getElementById('link-twisted-promo').value = paymentLinks.twisted_promo || '';
                 document.getElementById('link-helicity-normal').value = paymentLinks.helicity_normal || '';
@@ -810,12 +1162,10 @@
         const oldPTwisted = document.getElementById('old-price-twisted');
         const pHelicity = document.getElementById('price-helicity');
         const oldPHelicity = document.getElementById('old-price-helicity');
-        const banner = document.getElementById('announcement-banner');
         const btnTogglePromo = document.getElementById('btn-toggle-promo');
         const promoStatusText = document.getElementById('promo-status-text');
 
         if (isPromoActive) {
-            // Layout da vitrine em promoção
             pTwisted.innerText = "R$ 5,00";
             pTwisted.style.color = "var(--success)";
             oldPTwisted.classList.remove('hidden');
@@ -824,25 +1174,16 @@
             pHelicity.style.color = "var(--success)";
             oldPHelicity.classList.remove('hidden');
 
-            banner.innerText = "⚡ PROMOÇÃO DE 50% OFF ATIVADA! COMPRE AGORA!";
-            banner.style.background = "linear-gradient(90deg, #9b59b6, var(--success))";
-
-            // Atualiza botões no painel admin
             btnTogglePromo.innerText = "Desativar Promoção";
             btnTogglePromo.style.background = "var(--danger)";
             promoStatusText.innerText = "Estado atual: ATIVADA (R$ 5,00 / R$ 4,99)";
         } else {
-            // Layout normal
             pTwisted.innerText = "R$ 10,00";
             oldPTwisted.classList.add('hidden');
 
             pHelicity.innerText = "R$ 7,99";
             oldPHelicity.classList.add('hidden');
 
-            banner.innerText = "🔥 PROMOÇÃO DE INAUGURAÇÃO! POUCO ESTOQUE RESTANTE!";
-            banner.style.background = "linear-gradient(90deg, var(--danger), #f39c12)";
-
-            // Atualiza botões no painel admin
             btnTogglePromo.innerText = "Ativar Promoção";
             btnTogglePromo.style.background = "var(--success)";
             promoStatusText.innerText = "Estado atual: INATIVA (R$ 10,00 / R$ 7,99)";
@@ -1053,7 +1394,6 @@
 
         const targetAccount = currentStockList[0];
 
-        // Definindo o valor da venda para registrar no faturamento
         let finalPrice = 0;
         if (currentPurchaseType === 'twisted') {
             finalPrice = isPromoActive ? 5.00 : 10.00;
@@ -1062,10 +1402,8 @@
         }
 
         try {
-            // Remove a conta vendida do estoque
             await deleteDoc(doc(db, targetCollection, targetAccount.id));
 
-            // Salva a venda realizada na coleção 'sales' para atualizar o faturamento
             await addDoc(collection(db, "sales"), {
                 product: currentPurchaseType,
                 price: finalPrice,
@@ -1116,14 +1454,14 @@
     document.getElementById('btn-buy-twisted').addEventListener('click', () => {
         currentPurchaseType = 'twisted';
         const preco = isPromoActive ? "R$ 5,00" : "R$ 10,00";
-        document.getElementById('payment-text').innerText = `Conta Twisted (1M) - Valor: ${preco}`;
+        document.getElementById('payment-text').innerText = `${translations[currentSelectedLang].card_twisted_title} - ${preco}`;
         document.getElementById('modal-payment').classList.remove('hidden');
     });
 
     document.getElementById('btn-buy-helicity').addEventListener('click', () => {
         currentPurchaseType = 'helicity';
         const preco = isPromoActive ? "R$ 4,99" : "R$ 7,99";
-        document.getElementById('payment-text').innerText = `Conta Helicity (600k) - Valor: ${preco}`;
+        document.getElementById('payment-text').innerText = `${translations[currentSelectedLang].card_helicity_title} - ${preco}`;
         document.getElementById('modal-payment').classList.remove('hidden');
     });
 
@@ -1144,7 +1482,7 @@
         if (activeLink && activeLink.trim() !== '') {
             window.open(activeLink, '_blank');
         } else {
-            alert('⚠️ Atenção: O dono da loja ainda não configurou o link de pagamento do Mercado Pago para esta oferta.');
+            alert('⚠️ O link para este idioma/preço ainda não foi cadastrado.');
         }
     });
 
